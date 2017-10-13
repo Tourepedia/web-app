@@ -20,6 +20,9 @@ export const ACTION_TYPE_FETCH_ITEM_FAILED = "FETCH_ROLE_ITEM_FAILED"
 export const ACTION_TYPE_CREATING_ITEM = "CREATING_ROLE"
 export const ACTION_TYPE_CREATED_ITEM = "CREATED_ROLE"
 export const ACTION_TYPE_CREATE_ITEM_FAILED = "CREATE_ROLE_FAILED"
+export const ACTION_TYPE_ROLE_UPDATING_PERMISSIONS = "ROLE_UPDATING_PERMISSIONS"
+export const ACTION_TYPE_ROLE_UPDATED_PERMISSIONS = "ROLE_UPDATED_PERMISSIONS"
+export const ACTION_TYPE_ROLE_UPDATE_PERMISSIONS_FAILED = "ROLE_UPDATE_PERMISSIONS_FAILED"
 
 // action creators
 export const fetchingItems = () => ({
@@ -65,6 +68,21 @@ export const createItemFailed = (errors) => ({
   type: ACTION_TYPE_CREATE_ITEM_FAILED,
   payload: errors
 })
+
+
+export const updatingPermissions = (id) => ({
+  type: ACTION_TYPE_ROLE_UPDATING_PERMISSIONS,
+  payload: { id }
+})
+export const updatedPermissions = (id, data) => ({
+  type: ACTION_TYPE_ROLE_UPDATED_PERMISSIONS,
+  payload: { id, data }
+})
+export const updatePermissionsFailed  = (id, errors) => ({
+  type: ACTION_TYPE_ROLE_UPDATE_PERMISSIONS_FAILED,
+  payload: { id, errors }
+})
+
 
 // Thunks
 // fetch list of items
@@ -115,6 +133,23 @@ export const createItem = (data) => (dispatch, getState) => {
 }
 
 
+export const updatePermissions = (roleId, permissions = []) => (dispatch, getState) => {
+  if (!roleId || !permissions) return
+
+  dispatch(updatingPermissions(roleId))
+  return api(getState()).updatePermissions(roleId, permissions)
+    .then(response => {
+      const { data } = response
+      dispatch(updatedPermissions(roleId, data.data))
+      return Promise.resolve(data)
+    })
+    .catch(error => {
+      dispatch(updatePermissionsFailed(roleId, error))
+      return Promise.reject(error)
+    })
+}
+
+
 /**
  * Reducer
  */
@@ -153,6 +188,22 @@ const ACTION_HANDLERS = {
 
   [ACTION_TYPE_CREATE_ITEM_FAILED]: (state, payload) =>
     listModel.updateMeta(state, { isCreating: false, creationErrors: payload }),
+
+  [ACTION_TYPE_ROLE_UPDATING_PERMISSIONS]:  (state, payload) => {
+    const { id } = payload
+    return listModel.updateItemMeta(state, id, { isUpdatingPermissions: true, permissionUpdationErrors: undefined })
+  },
+
+  [ACTION_TYPE_ROLE_UPDATED_PERMISSIONS]: (state, payload) => {
+    const { id, data } = payload
+    return listModel.updateItemMeta(listModel.updateOrCreate(state, data), id, { isUpdatingPermissions: false, permissionUpdationErrors: undefined })
+  },
+
+  [ACTION_TYPE_ROLE_UPDATE_PERMISSIONS_FAILED]: (state, payload) => {
+    const { id, errors } = payload
+    return listModel.updateMeta(state, id, { isUpdatingPermissions: false, permissionUpdationErrors: errors })
+  }
+
 
 };
 

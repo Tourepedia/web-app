@@ -5,7 +5,7 @@ import { Route, Redirect } from "react-router-dom"
 
 const PrivateRoute_ = ({ component: Component, user, permission, ...rest }) => (
   <Route {...rest} render={props => (
-    user.status === "authenticated" && user.info === "fetched" ? (
+    user.status === "authenticated" && user.info === "fetched" && user.data.permissions.indexOf(permission) !== -1 ? (
       <Component {...props}/>
     ) : user.status !== "authenticated" ? (
       <Redirect to={{

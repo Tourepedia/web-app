@@ -25,6 +25,19 @@ export default function usersApi (state = {}) {
         `/roles`,
         { ...data }
         )
+    },
+    getPermissions: function getPermissions () {
+      return api.get(
+        `/permissions/user`
+        )
+    },
+    updatePermissions: function updateRolePermissions (roleId, permissions) {
+      return api.post(
+        `/roles/${roleId}/update-permissions`,
+        {
+          permissions
+        }
+        )
     }
   }
 }

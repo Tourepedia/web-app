@@ -29,7 +29,7 @@ export const header = () => (
       <LinkContainer eventKey={3} to="/profile">
         <NavItem>User</NavItem>
       </LinkContainer>
-      <WithPermission permission="team">
+      <WithPermission permission="can_see_admin_dashboard">
         <LinkContainer eventKey={4} to="/a">
           <NavItem>Admin</NavItem>
         </LinkContainer>

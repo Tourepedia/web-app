@@ -40,7 +40,7 @@ class App extends Component {
               <Route path="/about" exact component={About}/>
               <Route path="/login" component={Login}/>
               <WithAuthRoute path="/profile" component={Profile}/>
-              <WithPermissionRoute path="/a" permission="member" component={Admin} />
+              <WithPermissionRoute path="/a" permission="can_see_admin_dashboard" component={Admin} />
               <Route component={E404}/>
             </Switch>
           </div>
