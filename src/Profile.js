@@ -1,32 +1,48 @@
 import React from "react"
-import { withRouter } from "react-router-dom"
+import { Switch, Route } from "react-router-dom"
 import { connect } from "react-redux"
-import { Grid, Button } from "components"
+import { Grid, Row, Col, ListGroup, ListGroupItem, Button } from "components"
+import { LinkContainer } from "react-router-bootstrap"
 import { logout } from "./store/user"
 
-
-const AuthButton_ = withRouter(({ history, user, logout }) => (
-  user.status === "authenticated" ? (
-    <p><Button onClick={() => {
-        logout().then(() => history.push('/'))
-      }}>Sign out</Button>
-    </p>
-  ) : (
-    <p>You are not logged in.</p>
+export const Info_ = ({ user, history, logout }) => (
+  <div>
+    <h2>
+      Hi {user.data.name}
+      {" "}
+      <small>
+        {user.data.roles.map(role => <span className="label label-warning" key={role.name}>{role.name}</span>)}
+      </small>
+    </h2>
+    <p>{user.data.email}</p>
+    <hr />
+    <Button onClick={() => {
+      logout().then(() => history.push('/'))
+    }}>Sign out</Button>
+  </div>
   )
-))
 
-const AuthButton = connect(
-  state => ({ user: state.user }),
+export const Info = connect(
+  (state) => ({ user: state.user }),
   dispatch => ({ logout: (...args) => dispatch(logout(...args))})
-  )(AuthButton_)
+  )(Info_)
 
-
-export const Profile = ({ user }) => <Grid>
-  <h2>Hi {user.data.name}</h2>
-  <p>{user.data.email}</p>
-  <hr/>
-  <AuthButton />
+export const Profile = ({ match }) => <Grid>
+  <Row>
+    <Col xs={3}>
+      <ListGroup>
+        <ListGroupItem>Personal Settings</ListGroupItem>
+        <LinkContainer to={match.path} exact>
+          <ListGroupItem>Profile</ListGroupItem>
+        </LinkContainer>
+      </ListGroup>
+    </Col>
+    <Col xs={9}>
+      <Switch>
+        <Route path={match.path} component={Info} />
+      </Switch>
+    </Col>
+  </Row>
 </Grid>
 
-export default connect((state) => ({ user: state.user }))(Profile)
+export default Profile

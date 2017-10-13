@@ -25,6 +25,22 @@ export default function usersApi (state = {}) {
         `/users`,
         { ...data }
         )
+    },
+    getRoles: function getRoles (params) {
+      return api.get(
+        `/roles`,
+        {
+          params
+        }
+        )
+    },
+    updateRoles: function updateUserRoles (id, roles) {
+      return api.post(
+        `/users/${id}/update-roles`,
+        {
+          roles
+        }
+        )
     }
   }
 }

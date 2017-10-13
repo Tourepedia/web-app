@@ -20,6 +20,9 @@ export const ACTION_TYPE_FETCH_ITEM_FAILED = "FETCH_USER_ITEM_FAILED"
 export const ACTION_TYPE_CREATING_ITEM = "CREATING_USER"
 export const ACTION_TYPE_CREATED_ITEM = "CREATED_USER"
 export const ACTION_TYPE_CREATE_ITEM_FAILED = "CREATE_USER_FAILED"
+export const ACTION_TYPE_USER_UPDATING_ROLES = "USER_UPDATING_ROLES"
+export const ACTION_TYPE_USER_UPDATED_ROLES = "USER_UPDATED_ROLES"
+export const ACTION_TYPE_USER_UPDATE_ROLES_FAILED = "USER_UPDATE_ROLES_FAILED"
 
 // action creators
 export const fetchingItems = () => ({
@@ -65,6 +68,20 @@ export const createItemFailed = (errors) => ({
   type: ACTION_TYPE_CREATE_ITEM_FAILED,
   payload: errors
 })
+
+export const updatingRoles = (id) => ({
+  type: ACTION_TYPE_USER_UPDATING_ROLES,
+  payload: { id }
+})
+export const updatedRoles = (id, data) => ({
+  type: ACTION_TYPE_USER_UPDATED_ROLES,
+  payload: { id, data }
+})
+export const updateRolesFailed  = (id, errors) => ({
+  type: ACTION_TYPE_USER_UPDATE_ROLES_FAILED,
+  payload: { id, errors }
+})
+
 
 // Thunks
 // fetch list of items
@@ -115,6 +132,23 @@ export const createItem = (data) => (dispatch, getState) => {
 }
 
 
+export const updateRoles = (userId, roles = []) => (dispatch, getState) => {
+  if (!userId || !roles) return
+
+  dispatch(updatingRoles(userId))
+  return api(getState()).updateRoles(userId, roles)
+    .then(response => {
+      const { data } = response
+      dispatch(updatedRoles(userId, data.data))
+      return Promise.resolve(data)
+    })
+    .catch(error => {
+      dispatch(updateRolesFailed(userId, error))
+      return Promise.reject(error)
+    })
+}
+
+
 /**
  * Reducer
  */
@@ -153,6 +187,21 @@ const ACTION_HANDLERS = {
 
   [ACTION_TYPE_CREATE_ITEM_FAILED]: (state, payload) =>
     listModel.updateMeta(state, { isCreating: false, creationErrors: payload }),
+
+  [ACTION_TYPE_USER_UPDATING_ROLES]:  (state, payload) => {
+    const { id } = payload
+    return listModel.updateItemMeta(state, id, { isUpdatingRoles: true, roleUpdationErrors: undefined })
+  },
+
+  [ACTION_TYPE_USER_UPDATED_ROLES]: (state, payload) => {
+    const { id, data } = payload
+    return listModel.updateItemMeta(listModel.updateOrCreate(state, data), id, { isUpdatingRoles: false, roleUpdationErrors: undefined })
+  },
+
+  [ACTION_TYPE_USER_UPDATE_ROLES_FAILED]: (state, payload) => {
+    const { id, errors } = payload
+    return listModel.updateMeta(state, id, { isUpdatingRoles: false, roleUpdationErrors: errors })
+  }
 
 };
 

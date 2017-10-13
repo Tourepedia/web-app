@@ -13,21 +13,6 @@ export class ShowItem extends Component {
     super(...args)
     const { fetch } = this.props
     fetch().catch(_ => {})
-
-    this.state = {
-      showAddContact: false
-    }
-  }
-  toggleShowAddContactState = (e) => {
-    e.preventDefault()
-    this.setState(prevState => ({
-      showAddContact: !prevState.showAddContact
-    }))
-  }
-
-  handleAddContact = (data) => {
-    const { addContact } = this.props
-    addContact(data)
   }
 
   render () {
