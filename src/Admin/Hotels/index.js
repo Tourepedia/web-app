@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
-import { Route, Switch, withRouter, matchPath, Link } from "react-router-dom"
+import { Route, Switch, withRouter, matchPath, NavLink } from "react-router-dom"
 import { injectReducer } from "reducers"
 import {default as reducer} from "./store"
 import {
@@ -12,6 +12,8 @@ import * as listModel from "listModel"
 import List from "./list"
 import Show from "./show"
 import New from "./new"
+import RoomTypes from "./RoomTypes"
+import MealPlans from "./MealPlans"
 
 export class View extends Component {
   // we need store from context type for adding reducer
@@ -49,7 +51,7 @@ export class View extends Component {
     //   && this.previousLocation !== location // not first render
     //   )
     let hotel
-    const newMatch = matchPath(location.pathname, { path: match.url + "/:hotelId" })
+    let newMatch = matchPath(location.pathname, { path: match.url + "/:hotelId" })
     if (newMatch) {
       const { params } = newMatch
       if (params.hotelId) {
@@ -69,7 +71,7 @@ export class View extends Component {
       })
     }
 
-    if (location.pathname === match.url + "/new") {
+    if ((new RegExp(`${match.url}/new`)).test(location.pathname)) {
       // add the new into breadcrumb
       breadcrumb.push({
         to: `${match.url}/new`,
@@ -77,12 +79,61 @@ export class View extends Component {
       })
     }
 
+    if ((new RegExp(`${match.url}/room-types`)).test(location.pathname)) {
+      // add the new into breadcrumb
+      breadcrumb.push({
+        to: `${match.url}/room-types`,
+        label: "Room Types"
+      })
+    }
+
+    if ((new RegExp(`${match.url}/meal-plans`)).test(location.pathname)) {
+      // add the new into breadcrumb
+      breadcrumb.push({
+        to: `${match.url}/meal-plans`,
+        label: "Meal Plans"
+      })
+    }
+
+    if ((new RegExp(`${match.url}/room-types/new`)).test(location.pathname)) {
+      // add the new into breadcrumb
+      breadcrumb.push({
+        to: `${match.url}/room-types/new`,
+        label: "Add New"
+      })
+    }
+
+    if ((new RegExp(`${match.url}/meal-plans/new`)).test(location.pathname)) {
+      // add the new into breadcrumb
+      breadcrumb.push({
+        to: `${match.url}/meal-plans/new`,
+        label: "Add New"
+      })
+    }
+
     return  <div>
       <Breadcrumb breadcrumb={breadcrumb}>
-        <Link className="pull-right" to={`${match.url}/new`}>Add New</Link>
+        <Switch>
+          <Route path={`${match.url}/room-types`}>
+            <NavLink className="pull-right" to={`${match.url}/room-types/new`}>Add New Room Type</NavLink>
+          </Route>
+          <Route path={`${match.url}/meal-plans`}>
+            <NavLink className="pull-right" to={`${match.url}/meal-plans/new`}>Add New Meal Plan</NavLink>
+          </Route>
+          <Route>
+            <NavLink className="pull-right" to={`${match.url}/new`}>Add New Hotel</NavLink>
+          </Route>
+        </Switch>
       </Breadcrumb>
+      <p className="text-right">
+        <NavLink to={`${match.url}/room-types`}>Room Types</NavLink>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <NavLink to={`${match.url}/meal-plans`}>Meal Plans</NavLink>
+      </p>
       <Switch>
         <Route path={`${match.url}/new`} component={New} />
+        <Route path={`${match.url}/room-types`} component={RoomTypes} />
+        <Route path={`${match.url}/meal-plans`} component={MealPlans} />
         <Route path={`${match.url}/:hotelId`} component={Show} />
         <Route path={match.url} component={List} />
       </Switch>

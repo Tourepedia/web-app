@@ -3,9 +3,6 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 
 import { Panel, Form, FormGroup, FormControl, ControlLabel, HelpBlock, Col, Button, Alert } from "components"
-import LocationSelect from "components/Select/locations"
-import MealPlansSelect from "./mealPlansSelect"
-import RoomTypesSelect from "./roomTypesSelect"
 import { createItem } from "./store"
 import { LinkContainer } from "react-router-bootstrap"
 
@@ -15,8 +12,6 @@ export class NewItem extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
-      name: "",
-      dirty: {},
       created: false
     }
   }
@@ -28,29 +23,14 @@ export class NewItem extends Component {
     }
   }
 
-  getValidationState = () => {
-    const length = this.state.name.length
-    if (length >= 4 && length <= 100) return 'success'
-
-    if (this.state.dirty.name) {
-      return "error"
-    }
-  }
-
-  handleNameChange = (e) => {
-    this.setState({ name: e.target.value, dirty: { name: true } });
-  }
-
   handleCreateSubmit = (e) => {
     e.preventDefault()
 
     const { create } = this.props
     const name = this.inputNameRef.value.trim()
-    const locations = this.inputLocationsRef.value.map(l => l.value)
-    const mealPlans = this.inputMealPlansRef.value.map(l => l.value)
-    const roomTypes = this.inputRoomTypesRef.value.map(l => l.value)
+    const description = this.inputDescriptionRef.value.trim()
 
-    create({ name, locations, mealPlans, roomTypes })
+    create({ name, description })
   }
 
   handleCloseCreatedAlert = (e) => {
@@ -71,10 +51,10 @@ export class NewItem extends Component {
         {created ? (
           <Alert bsStyle="success" onDismiss={this.handleCloseCreatedAlert}>
             <h4>Success!!</h4>
-            <p>Hotel successfull created.</p>
+            <p>Meal Plan successfully created.</p>
             <p>
-              <LinkContainer to={`/a/hotels/${lastCreatedId}`}>
-                <Button bsStyle="info" bsSize="sm" autoFocus>See Hotel</Button>
+              <LinkContainer to={`/a/hotels/meal-plans/${lastCreatedId}`}>
+                <Button bsStyle="info" bsSize="sm" autoFocus>See Meal Plan</Button>
               </LinkContainer>
               {" "}
               <span> or </span>
@@ -86,55 +66,39 @@ export class NewItem extends Component {
         <Panel header={<div className="text-right">Fields marked with * are medantory.</div>}>
           <Form onSubmit={this.handleCreateSubmit} horizontal>
             <FormGroup
-              controlId="newHotel_name"
-              validationState={this.getValidationState()}>
+              controlId="newHotelMealPlan_name">
               <Col componentClass={ControlLabel} sm={2}>
                 Name *
               </Col>
               <Col sm={10}>
                 <FormControl
                   type="text"
-                  value={this.state.name}
-                  placeholder="Taj Hotel"
-                  required
+                  name="name"
+                  placeholder="MAP"
                   maxLength="100"
-                  minLength="4"
-                  inputRef={ref => { this.inputNameRef = ref }}
+                  required
                   autoFocus
-                  onChange={this.handleNameChange}
+                  inputRef={ref => { this.inputNameRef = ref }}
                 />
                 <FormControl.Feedback />
-                <HelpBlock>Hotel name should be unique with minimum 4 chars to maximum 100 chars.</HelpBlock>
+                <HelpBlock>Meal Plan's name should be unique with minimum 1 chars to maximum 100 chars.</HelpBlock>
               </Col>
             </FormGroup>
             <FormGroup
-              controlId="newHotel_locations">
+              controlId="newHotelMealPlan_description">
               <Col componentClass={ControlLabel} sm={2}>
-                Location *
+                Description *
               </Col>
               <Col sm={10}>
-                <LocationSelect ref={ref => { this.inputLocationsRef = ref }} required />
-                <HelpBlock>Select atleast one location associated with hotel.</HelpBlock>
-              </Col>
-            </FormGroup>
-            <FormGroup
-              controlId="newHotel_meal-plans">
-              <Col componentClass={ControlLabel} sm={2}>
-                Meal Plans
-              </Col>
-              <Col sm={10}>
-                <MealPlansSelect ref={ref => { this.inputMealPlansRef = ref }} />
-                <HelpBlock>Select meal plans provided by the hotel.</HelpBlock>
-              </Col>
-            </FormGroup>
-            <FormGroup
-              controlId="newHotel_room-types">
-              <Col componentClass={ControlLabel} sm={2}>
-                Room Types
-              </Col>
-              <Col sm={10}>
-                <RoomTypesSelect ref={ref => { this.inputRoomTypesRef = ref }} />
-                <HelpBlock>Select room types provided by the hotel.</HelpBlock>
+                <FormControl
+                  componentClass="textarea"
+                  placeholder="Modified American Plan (Two meals: Breakfast and one of Lunch or Dinner)"
+                  maxLength="1000"
+                  required
+                  inputRef={ref => { this.inputDescriptionRef = ref }}
+                />
+                <FormControl.Feedback />
+                <HelpBlock>Some description about the meal plan.</HelpBlock>
               </Col>
             </FormGroup>
             <FormGroup>
@@ -150,7 +114,7 @@ export class NewItem extends Component {
                       Submit
                     </Button>
                     {" "}
-                    <LinkContainer to="/a/hotels">
+                    <LinkContainer to="/a/hotels/meal-plans">
                       <Button>
                         Cancel
                       </Button>
@@ -166,7 +130,7 @@ export class NewItem extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const items = state.hotels
+  const items = state.hotelMealPlans
   const meta = listModel.getMeta(items)
   return {
     meta

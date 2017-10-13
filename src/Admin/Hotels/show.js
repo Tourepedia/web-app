@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Route, Link } from "react-router-dom"
+import { Route, Link, Switch, NavLink } from "react-router-dom"
 import { connect } from "react-redux"
 import { LinkContainer } from "react-router-bootstrap"
 import { fetchItem, addContact } from "./store"
@@ -45,97 +45,94 @@ export class NewContact_ extends Component {
     const { hotel } = this.props
     const meta = listModel.getItemMeta(hotel)
     const { created } = this.state
-    return (
-      <Panel>
-        {created ? (
-          <Alert onDismiss={this.handleCloseCreatedAlert}>
-            <h4>Success!!</h4>
-            <p>Contact successfully created for Hotel.</p>
-            <p>
-              <LinkContainer to={`/a/hotels/${hotel.id}`}>
-                <Button bsStyle="info" bsSize="sm" autoFocus>Done Adding</Button>
-              </LinkContainer>
-              {" "}
-              <span> or </span>
-              {" "}
-              <Button bsSize="sm" onClick={this.handleCloseCreatedAlert}>Add More</Button>
-            </p>
-          </Alert>
-          ) : (
-        <Form horizontal onSubmit={this.handleSubmit}>
-          <FormGroup
-            controlId="newHotelContact_name">
-            <Col componentClass={ControlLabel} sm={2}>
-              Name *
-            </Col>
-            <Col sm={10}>
+    return (created ? (
+        <Alert onDismiss={this.handleCloseCreatedAlert}>
+          <h4>Success!!</h4>
+          <p>Contact successfully created for Hotel.</p>
+          <p>
+            <LinkContainer to={`/a/hotels/${hotel.id}`}>
+              <Button bsStyle="info" bsSize="sm" autoFocus>Done Adding</Button>
+            </LinkContainer>
+            {" "}
+            <span> or </span>
+            {" "}
+            <Button bsSize="sm" onClick={this.handleCloseCreatedAlert}>Add More</Button>
+          </p>
+        </Alert>
+        ) : (<Panel bsStyle="info">
+      <Form horizontal onSubmit={this.handleSubmit}>
+        <FormGroup
+          controlId="newHotelContact_name">
+          <Col componentClass={ControlLabel} sm={2}>
+            Name *
+          </Col>
+          <Col sm={10}>
+            <FormControl
+              type="text"
+              placeholder="John Mark"
+              required
+              maxLength="100"
+              minLength="4"
+              inputRef={ref => { this.inputNameRef = ref }}
+              autoFocus
+            />
+            <FormControl.Feedback />
+            <HelpBlock>Name of the contact must be from 4 to 100 chars.</HelpBlock>
+          </Col>
+        </FormGroup>
+        <FormGroup
+          controlId="newHotelContact_name">
+          <Col componentClass={ControlLabel} sm={2}>
+            Phone *
+          </Col>
+          <Col sm={10}>
+            <InputGroup>
+              <InputGroup.Addon>+91</InputGroup.Addon>
               <FormControl
                 type="text"
-                placeholder="John Mark"
+                placeholder="9551212333"
                 required
                 maxLength="100"
                 minLength="4"
-                inputRef={ref => { this.inputNameRef = ref }}
-                autoFocus
+                inputRef={ref => { this.inputPhoneNumberRef = ref }}
               />
-              <FormControl.Feedback />
-              <HelpBlock>Name of the contact must be from 4 to 100 chars.</HelpBlock>
+            </InputGroup>
+            <FormControl.Feedback />
+          </Col>
+        </FormGroup>
+        <FormGroup
+          controlId="newHotelContact_name">
+          <Col componentClass={ControlLabel} sm={2}>
+            Email
+          </Col>
+          <Col sm={10}>
+            <FormControl
+              type="email"
+              placeholder="contact@example.com"
+              maxLength="100"
+              inputRef={ref => { this.inputEmailRef = ref }}
+            />
+          </Col>
+        </FormGroup>
+        {meta.isCreatingContact ? (
+          <FormGroup>
+            <Col smOffset={2} sm={10}>
+              <Button type="button" disabled>Adding...</Button>
             </Col>
           </FormGroup>
-          <FormGroup
-            controlId="newHotelContact_name">
-            <Col componentClass={ControlLabel} sm={2}>
-              Phone *
-            </Col>
-            <Col sm={10}>
-              <InputGroup>
-                <InputGroup.Addon>+91</InputGroup.Addon>
-                <FormControl
-                  type="text"
-                  placeholder="9551212333"
-                  required
-                  maxLength="100"
-                  minLength="4"
-                  inputRef={ref => { this.inputPhoneNumberRef = ref }}
-                />
-              </InputGroup>
-              <FormControl.Feedback />
+          ) : (
+          <FormGroup>
+            <Col smOffset={2} sm={10}>
+              <Button bsStyle="primary" type="submit">Submit</Button>
+              {" "}
+              <LinkContainer to={`/a/hotels/${hotel.id}`}>
+                <Button bsStyle="default">Cancel</Button>
+              </LinkContainer>
             </Col>
           </FormGroup>
-          <FormGroup
-            controlId="newHotelContact_name">
-            <Col componentClass={ControlLabel} sm={2}>
-              Email
-            </Col>
-            <Col sm={10}>
-              <FormControl
-                type="email"
-                placeholder="contact@example.com"
-                maxLength="100"
-                inputRef={ref => { this.inputEmailRef = ref }}
-              />
-            </Col>
-          </FormGroup>
-          {meta.isCreatingContact ? (
-            <FormGroup>
-              <Col smOffset={2} sm={10}>
-                <Button type="button" disabled>Adding...</Button>
-              </Col>
-            </FormGroup>
-            ) : (
-            <FormGroup>
-              <Col smOffset={2} sm={10}>
-                <Button bsStyle="primary" type="submit">Submit</Button>
-                {" "}
-                <LinkContainer to={`/a/hotels/${hotel.id}`}>
-                  <Button bsStyle="default">Cancel</Button>
-                </LinkContainer>
-              </Col>
-            </FormGroup>
-            )}
-        </Form>)}
-      </Panel>
-      )
+          )}
+      </Form>
+    </Panel>))
   }
 }
 
@@ -160,9 +157,14 @@ const mapDispatchToProps_ = (dispatch, ownProps) => {
 export const NewContact = connect(mapStateToProps_, mapDispatchToProps_)(NewContact_)
 
 
-export const HotelContacts = ({ contacts }) => {
+export const Contacts_ = ({ contacts, match }) => {
   if (!contacts.length) {
-    return <p className="text-center">No contact attached</p>
+    return <div className="text-center">
+      <p>No Contact Attached</p>
+      <LinkContainer to={`${match.url}/add-contact`}>
+        <Button>Add Contact</Button>
+      </LinkContainer>
+    </div>
   }
   return <Table hover condensed bordered>
     <thead>
@@ -184,6 +186,17 @@ export const HotelContacts = ({ contacts }) => {
     </tbody>
   </Table>
 }
+
+const mapStateToProps__ = (state, ownProps) => {
+  const { match: { params } } = ownProps
+  const hotelId = parseInt(params.hotelId, 10)
+  const hotel = listModel.getItem(state.hotels, hotelId)
+  return {
+    contacts: hotel.contacts
+  }
+}
+
+export const Contacts = connect(mapStateToProps__)(Contacts_)
 
 export class ShowItem extends Component {
   constructor (...args) {
@@ -224,15 +237,52 @@ export class ShowItem extends Component {
         {item.locations.map(l => l.short_name).join(", ")}
       </div>
     }>
-      <Panel header={<h3 id="hotel-contacts">
+      <section id="hotel-room-types">
+        <h4>
+          <Link to={`${match.url}#hotel-room-types`}>#</Link>
+          <span> Room Types</span>
+        </h4>
+        <p>
+          {item.room_types && item.room_types.length
+            ? item.room_types.map(rt => <span key={rt.id}>
+            <span className="label label-primary" title={rt.description}>{rt.name}</span> </span>)
+            : <span className="text-muted">Not Set</span>
+          }
+        </p>
+      </section>
+      <hr/>
+      <section id="hotel-meal-plans">
+        <h4>
+          <Link to={`${match.url}#hotel-meal-plans`}>#</Link>
+          <span> Meal Plans</span>
+        </h4>
+        <p>
+          {item.meal_plans && item.meal_plans.length
+            ? item.meal_plans.map(mp => <span key={mp.id}>
+            <span className="label label-primary" title={mp.description}>{mp.name}</span> </span>)
+            : <span className="text-muted">Not Set</span>
+          }
+        </p>
+      </section>
+      <hr />
+      <section id="hotel-contacts">
+        <Switch>
+          <Route path={`/a/hotels/${item.id}/add-contact`}>
+            <NavLink to={`/a/hotels/${item.id}`} className="pull-right">Cancel</NavLink>
+          </Route>
+          <Route path={`/a/hotels/${item.id}`}>
+            <NavLink to={`/a/hotels/${item.id}/add-contact`} className="pull-right">Add Contact</NavLink>
+          </Route>
+        </Switch>
+        <h4>
           <Link to={`${match.url}#hotel-contacts`}>#</Link>
-          {" "}
-          Contacts
-          <Link to={`/a/hotels/${item.id}/add-contact`} className="pull-right">Add new</Link>
-        </h3>}>
-        <Route path={`${match.path}/add-contact`} component={NewContact} />
-        <HotelContacts contacts={item.contacts} />
-      </Panel>
+          <span> Contacts</span>
+        </h4>
+        <Switch>
+          <Route path={`${match.path}/add-contact`} component={NewContact} />
+          <Route path={`${match.path}`} component={Contacts} />
+        </Switch>
+      </section>
     </Panel>)
   }
 }

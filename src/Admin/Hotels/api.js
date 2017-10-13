@@ -31,6 +31,22 @@ export default function hotelsApi (state = {}) {
         `/hotels/${hotelId}/add-contact`,
         { ...contact }
         )
-    }
+    },
+    getMealPlans: function getMealPlans (params) {
+      return api.get(
+        `/hotel-meal-plans`,
+        {
+          params
+        }
+      )
+    },
+    getRoomTypes: function getRoomTypes (params) {
+      return api.get(
+        `/hotel-room-types`,
+        {
+          params
+        }
+      )
+    },
   }
 }
