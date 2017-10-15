@@ -9,14 +9,14 @@ axios.defaults.xsrfCookieName = undefined
 
 axios.defaults.baseURL = "http://localhost:8000/api"
 
-export const getSavedAuthTokens = () => window.sessionStorage.getItem("accessToken")
+export const getSavedAuthTokens = () => window.localStorage.getItem("accessToken")
 
 export const updateAuthTokens = (accessToken) => {
-  window.sessionStorage.setItem("accessToken", accessToken)
+  window.localStorage.setItem("accessToken", accessToken)
 }
 
 export const removeAuthTokens = () => {
-  window.sessionStorage.removeItem("accessToken")
+  window.localStorage.removeItem("accessToken")
 }
 
 
