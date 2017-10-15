@@ -10,7 +10,7 @@ import {
 
 import * as listModel from "listModel"
 import List from "./list"
-import Show from "./show"
+import Show from "./Show/"
 import New from "./new"
 import RoomTypes from "./RoomTypes"
 import MealPlans from "./MealPlans"

@@ -23,6 +23,9 @@ export const ACTION_TYPE_CREATE_ITEM_FAILED = "CREATE_HOTEL_FAILED"
 export const ACTION_TYPE_HOTEL_CREATING_CONTACT = "HOTEL_CREATING_CONTACT"
 export const ACTION_TYPE_HOTEL_CREATED_CONTACT = "HOTEL_CREATED_CONTACT"
 export const ACTION_TYPE_HOTEL_CREATE_CONTACT_FAILED = "HOTEL_CREATE_CONTACT_FAILED"
+export const ACTION_TYPE_HOTEL_CREATING_PRICE = "HOTEL_CREATING_PRICE"
+export const ACTION_TYPE_HOTEL_CREATED_PRICE = "HOTEL_CREATED_PRICE"
+export const ACTION_TYPE_HOTEL_CREATE_PRICE_FAILED = "HOTEL_CREATE_PRICE_FAILED"
 
 // action creators
 export const fetchingItems = () => ({
@@ -80,6 +83,20 @@ export const contactCreateFailed  = (id, errors) => ({
   type: ACTION_TYPE_HOTEL_CREATE_CONTACT_FAILED,
   payload: { id, errors }
 })
+
+export const priceCreating = (id) => ({
+  type: ACTION_TYPE_HOTEL_CREATING_PRICE,
+  payload: { id }
+})
+export const priceCreated = (id, data) => ({
+  type: ACTION_TYPE_HOTEL_CREATED_PRICE,
+  payload: { id, data }
+})
+export const priceCreateFailed  = (id, errors) => ({
+  type: ACTION_TYPE_HOTEL_CREATE_PRICE_FAILED,
+  payload: { id, errors }
+})
+
 
 // Thunks
 export const fetchItems = (params = {}) => (dispatch, getState) => {
@@ -146,6 +163,24 @@ export const addContact = (hotelId, contact = {}) => (dispatch, getState) => {
     })
 }
 
+// add price to hotel
+export const addPrice = (hotelId, price = {}) => (dispatch, getState) => {
+  if (!hotelId || !price) return
+
+  dispatch(priceCreating(hotelId))
+  return api(getState()).addPrice(hotelId, price)
+    .then(response => {
+      const { data } = response
+      dispatch(priceCreated(hotelId, data.data))
+      return Promise.resolve(data)
+    })
+    .catch(error => {
+      dispatch(priceCreateFailed(hotelId, error))
+      return Promise.reject(error)
+    })
+}
+
+
 /**
  * Reducer
  */
@@ -187,18 +222,33 @@ const ACTION_HANDLERS = {
 
   [ACTION_TYPE_HOTEL_CREATING_CONTACT]:  (state, payload) => {
     const { id } = payload
-    return listModel.updateItemMeta(state, id, { isCreatingContact: true, creatingCreationErrors: undefined })
+    return listModel.updateItemMeta(state, id, { isCreatingContact: true, contactCreationErrors: undefined })
   },
 
   [ACTION_TYPE_HOTEL_CREATED_CONTACT]: (state, payload) => {
     const { id, data } = payload
-    return listModel.updateItemMeta(listModel.updateOrCreate(state, data), id, { isCreatingContact: false, creatingCreationErrors: undefined })
+    return listModel.updateItemMeta(listModel.updateOrCreate(state, data), id, { isCreatingContact: false, contactCreationErrors: undefined })
   },
 
   [ACTION_TYPE_HOTEL_CREATE_CONTACT_FAILED]: (state, payload) => {
     const { id, errors } = payload
-    return listModel.updateMeta(state, id, { isCreatingContact: false, creatingCreationErrors: errors })
-  }
+    return listModel.updateMeta(state, id, { isCreatingContact: false, contactCreationErrors: errors })
+  },
+
+  [ACTION_TYPE_HOTEL_CREATING_PRICE]:  (state, payload) => {
+    const { id } = payload
+    return listModel.updateItemMeta(state, id, { isCreatingPrice: true, priceCreationErrors: undefined })
+  },
+
+  [ACTION_TYPE_HOTEL_CREATED_PRICE]: (state, payload) => {
+    const { id, data } = payload
+    return listModel.updateItemMeta(listModel.updateOrCreate(state, data), id, { isCreatingPrice: false, priceCreationErrors: undefined })
+  },
+
+  [ACTION_TYPE_HOTEL_CREATE_PRICE_FAILED]: (state, payload) => {
+    const { id, errors } = payload
+    return listModel.updateMeta(state, id, { isCreatingPrice: false, priceCreationErrors: errors })
+  },
 
 };
 

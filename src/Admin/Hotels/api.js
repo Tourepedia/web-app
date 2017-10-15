@@ -48,5 +48,13 @@ export default function hotelsApi (state = {}) {
         }
       )
     },
+    addPrice: function getRoomTypes (hotelId, price) {
+      return api.post(
+        `/hotels/${hotelId}/add-price`,
+        {
+          ...price
+        }
+      )
+    },
   }
 }
