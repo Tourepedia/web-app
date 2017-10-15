@@ -14,6 +14,7 @@ import Show from "./Show/"
 import New from "./new"
 import RoomTypes from "./RoomTypes"
 import MealPlans from "./MealPlans"
+import Prices from "./prices"
 
 export class View extends Component {
   // we need store from context type for adding reducer
@@ -111,6 +112,14 @@ export class View extends Component {
       })
     }
 
+    if ((new RegExp(`${match.url}/prices`)).test(location.pathname)) {
+      // add the new into breadcrumb
+      breadcrumb.push({
+        to: `${match.url}/prices`,
+        label: "Prices"
+      })
+    }
+
     return  <div>
       <Breadcrumb breadcrumb={breadcrumb}>
         <Switch>
@@ -126,6 +135,8 @@ export class View extends Component {
         </Switch>
       </Breadcrumb>
       <p className="text-right">
+        <NavLink to={`${match.url}/prices`}>Prices</NavLink>
+        &nbsp;&nbsp;&nbsp;&nbsp;
         <NavLink to={`${match.url}/room-types`}>Room Types</NavLink>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <NavLink to={`${match.url}/meal-plans`}>Meal Plans</NavLink>
@@ -134,6 +145,7 @@ export class View extends Component {
         <Route path={`${match.url}/new`} component={New} />
         <Route path={`${match.url}/room-types`} component={RoomTypes} />
         <Route path={`${match.url}/meal-plans`} component={MealPlans} />
+        <Route path={`${match.url}/prices`} component={Prices} />
         <Route path={`${match.url}/:hotelId`} component={Show} />
         <Route path={match.url} component={List} />
       </Switch>

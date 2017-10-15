@@ -7,7 +7,7 @@ export class LocationSelect extends Component {
     super(...args)
     this.state = {
       q: "",
-      values: []
+      values: undefined
     }
     this.debouncer = undefined
   }

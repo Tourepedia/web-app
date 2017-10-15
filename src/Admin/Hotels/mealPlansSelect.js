@@ -4,17 +4,24 @@ import Select from "components/Select/"
 import api from "./api"
 
 export class MealPlansSelect extends Component {
+  static defaultProps = {
+    name: "meal_plans[]",
+    multi: true,
+    placeholder: "Search or Select meal plans..."
+  }
   constructor (...args) {
     super(...args)
     const { plan, plans } = this.props
     this.state = {
       q: "",
       values: plans
-        ? plans.map(plan => ({ label: plan.name, value: plan.id }))
-        : plan && { label: plan.name, value: plan.id }
+        ? plans.map(this.makeOption)
+        : this.makeOption(plan)
     }
     this.debouncer = undefined
   }
+
+  makeOption = (plan) => plan && ({ label: plan.name, value: plan.id, title: plan.description })
 
   getOptions = (q, callback) => {
     clearTimeout(this.debouncer)
@@ -23,10 +30,7 @@ export class MealPlansSelect extends Component {
         .then(response => {
           const { data: { data } } = response
           callback(null, {
-            options: data.map(l => ({
-              label: l.name,
-              value: l.id
-            })),
+            options: data.map(this.makeOption),
             // CAREFUL! Only set this to true when there are no more options,
             // or more specific queries will not be sent to the server.
             complete: true
@@ -47,15 +51,14 @@ export class MealPlansSelect extends Component {
 
   render () {
     const { values } = this.state
+    const { multi, ...otherProps } = this.props
     return <Select.Async
-      name="meal_plans[]"
-      multi
-      closeOnSelect={false}
+      multi={multi}
+      closeOnSelect={!multi}
       loadOptions={this.getOptions}
-      placeholder="Search or Select meal plans..."
       onChange={this.handleChange}
       value={values}
-      {...this.props}
+      {...otherProps}
        />
   }
 }

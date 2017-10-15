@@ -15,6 +15,14 @@ export default function hotelsApi (state = {}) {
         }
       )
     },
+    search: function searchHotels (params) {
+      return api.get(
+        `/hotels/search`,
+        {
+          params
+        }
+        )
+    },
     show: function getItem (id) {
       return api.get(
         `/hotels/${id}`

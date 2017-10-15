@@ -47,10 +47,10 @@ export const List = ({ prices, match }) => {
           <td>{p.children_with_extra_bed}</td>
           <td>{p.children_without_extra_bed}</td>
           <td>
-            <DatePicker readOnly dateFormat="DD MMM, YYYY" defaultValue={p.dates.filter(d => d.role === "start_date")[0].value} />
+            <DatePicker readOnly dateFormat="DD MMM, YYYY" defaultValue={p.start_date} />
           </td>
           <td>
-            <DatePicker readOnly dateFormat="DD MMM, YYYY" defaultValue={p.dates.filter(d => d.role === "end_date")[0].value} />
+            <DatePicker readOnly dateFormat="DD MMM, YYYY" defaultValue={p.end_date} />
           </td>
           <td>{p.prices.map(p => p.value).join(", ")}</td>
         </tr>))}
@@ -73,12 +73,10 @@ export const Prices = ({ match, item }) => {
         <Link to={`${match.url}#hotel-prices`}>#</Link>
         <span> Prices</span>
       </h4>
-      <Switch>
-        <Route path={`${match.path}/add-price`} component={NewPrice} />
-        <Route path={`${match.path}`}>
-          <List prices={item.prices} match={match} />
-        </Route>
-      </Switch>
+      <Route path={`${match.path}/add-price`} component={NewPrice} />
+      <Route path={`${match.path}`}>
+        <List prices={item.prices} match={match} />
+      </Route>
     </section>)
 }
 

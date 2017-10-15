@@ -17,9 +17,9 @@ import Roles from "./Roles/"
 
 export const Admin = () => {
   return (
-    <Grid>
+    <Grid fluid>
       <Row>
-        <Col xs={3}>
+        <Col xs={2}>
           <ListGroup>
             <ListGroupItem>Menu</ListGroupItem>
             <LinkContainer to="/a" exact>
@@ -39,7 +39,7 @@ export const Admin = () => {
             </LinkContainer>
           </ListGroup>
         </Col>
-        <Col xs={9}>
+        <Col xs={10}>
           <Switch>
             <Route path="/a" exact component={Dashboard} />
             <Route path="/a/hotels" component={Hotels} />

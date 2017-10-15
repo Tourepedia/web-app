@@ -1,9 +1,12 @@
 import React, { Component } from "react"
 import Select from "react-select"
 
+import getDisplayName from "getDisplayName"
+
 import "react-select/dist/react-select.min.css"
 
-export class Select_ extends Component {
+export const withAutoSelect = (WrappedSelect = Select) => class Wrapper extends Component {
+  static displayName = `WithAuto${getDisplayName(WrappedSelect)}`
   state = {
     value: undefined
   }
@@ -27,7 +30,7 @@ export class Select_ extends Component {
   }
   render () {
     const { inputRef, ...otherProps } = this.props
-    return <Select
+    return <WrappedSelect
       ref={ref => { this.selectRef = ref }}
       onChange={this.handleOnChange}
       closeOnSelect={!this.props.multi}
@@ -38,4 +41,4 @@ export class Select_ extends Component {
 }
 
 
-export default Select_
+export default Select

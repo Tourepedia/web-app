@@ -8,13 +8,15 @@ import { Button, Panel, Alert, Form, FormGroup, ControlLabel, FormControl, Row, 
 
 import { DatePicker } from "components/DateTime"
 
-import Select from "components/Select/"
+import { default as Sel, withAutoSelect } from "components/Select/"
 
 import * as listModel from "listModel"
 
 import { addPrice } from "./../store"
 
 const ALLOWED_EXTRA_BEDS = [0, 1, 2, 3, 4, 5].map(i => <option value={i} key={i}>{i}</option>)
+
+const Select = withAutoSelect(Sel)
 
 export class NewPrice extends Component {
   state = {

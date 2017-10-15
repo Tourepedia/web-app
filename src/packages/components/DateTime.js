@@ -21,14 +21,15 @@ export class DatePicker extends Component {
     componentClass: "span",
     dateFormat: "DD MMMM, YYYY",
     closeOnSelect: true,
-    timeFormat: false
+    timeFormat: false,
+    inputTZ: "utc"
   }
 
   constructor (...args) {
     super(...args)
-    const { defaultValue } = this.props
+    const { defaultValue, inputTZ } = this.props
     this.state = {
-      value: defaultValue
+      value: defaultValue && (inputTZ === "utc" ? moment.utc(defaultValue).local() : moment(defaultValue))
     }
   }
 
@@ -50,13 +51,13 @@ export class DatePicker extends Component {
   isValidDate = (date) => {
     const { startDate, endDate } = this.props
     if (startDate && endDate) {
-      return date.isAfter(startDate) && date.isBefore(endDate)
+      return date.isBetween(startDate, endDate, null, "[]")
     }
     if (startDate) {
-      return date.isAfter(startDate)
+      return date.isSameOrAfter(startDate)
     }
     if (endDate) {
-      return date.isBefore(endDate)
+      return date.isSameOrBefore(endDate)
     }
     return true
   }
@@ -84,7 +85,6 @@ export class DatePicker extends Component {
         name: "selected_date",
         placeholder: "DD MMMM, YYYY",
         id: controlId,
-        readOnly: true,
         ...inputProps
       }}
       value={value}

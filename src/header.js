@@ -12,7 +12,7 @@ import { LinkContainer } from "react-router-bootstrap"
 import WithPermission from "components/WithPermission"
 
 export const header = () => (
-  <Navbar staticTop>
+  <Navbar staticTop fluid>
     <Navbar.Header>
       <Navbar.Brand>
         <Link to="/">{ process.env.REACT_APP_APPLICATION_NAME }</Link>
