@@ -31,6 +31,7 @@
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "flow": "flow"
+    "flow": "flow",
+    "deploy": "npm run build && scp -r build/* build/.htaccess tourepedia:/home/anandsh/www/development/app/sudhir/"
   }
 }
