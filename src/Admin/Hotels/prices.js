@@ -139,15 +139,18 @@ export class PriceItem extends Component {
         let cwoebPrice
         for (let i = 0; i < pricesIds.length; i++) {
           const price = pricesByIds[pricesIds[i]]
-          if (price.adults_with_extra_bed === 0
-            && price.children_without_extra_bed === 0
-            && price.children_with_extra_bed === 0) {
+          const adults_with_extra_bed = parseInt(price.adults_with_extra_bed, 10)
+          const children_without_extra_bed = parseInt(price.children_without_extra_bed, 10)
+          const children_with_extra_bed = parseInt(price.children_with_extra_bed, 10)
+          if (adults_with_extra_bed === 0
+            && children_without_extra_bed === 0
+            && children_with_extra_bed === 0) {
             noExtraBedPrice = price
-          } else if (price.adults_with_extra_bed) {
+          } else if (adults_with_extra_bed) {
             awebPrice = price
-          } else if (price.children_with_extra_bed) {
+          } else if (children_with_extra_bed) {
             cwebPrice = price
-          } else if (price.children_without_extra_bed) {
+          } else if (children_without_extra_bed) {
             cwoebPrice = price
           }
         }
@@ -161,21 +164,21 @@ export class PriceItem extends Component {
         // now get the extra or extra bed prices
         if (aweb) {
           if (awebPrice) {
-            this.price += (awebPrice ? aweb * awebPrice.prices[0].value : 0)
+            this.price += (awebPrice ? aweb * parseInt(awebPrice.prices[0].value, 10) : 0)
           } else {
             warnMessage += "Adults with extra bed price not set. "
           }
         }
         if (cweb) {
           if (cwebPrice) {
-            this.price += (cwebPrice ? cweb * cwebPrice.prices[0].value : 0)
+            this.price += (cwebPrice ? cweb * parseInt(cwebPrice.prices[0].value, 10) : 0)
           } else {
             warnMessage += "Children with extra bed price not set. "
           }
         }
         if (cwoeb) {
           if (cwoebPrice) {
-            this.price += (cwoebPrice ? cwoeb * cwoebPrice.prices[0].value : 0)
+            this.price += (cwoebPrice ? cwoeb * parseInt(cwoebPrice.prices[0].value, 10) : 0)
           } else {
             warnMessage += "Chilren without extra bed price not set. "
           }
