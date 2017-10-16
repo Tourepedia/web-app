@@ -23,8 +23,8 @@ import { login } from "./../store/user"
 
 class Login extends Component {
   state = {
-    email: "sudhir.mitharwal@tourepedia.com",
-    password: "mitharwal",
+    email: process.env.REACT_APP_AUTH_EMAIL,
+    password: process.env.REACT_APP_AUTH_PASSWORD,
   }
 
   handleChangeEmail = e => {
