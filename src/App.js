@@ -32,7 +32,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={this.props.store}>
-        <Router>
+        <Router basename={process.env.REACT_APP_APPLICATION_BASE_URL}>
           <div>
             <Header />
             <Switch>

@@ -7,7 +7,7 @@ import axios from "axios"
 axios.defaults.xsrfCookieName = undefined
 
 
-axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL
+axios.defaults.baseURL = `${process.env.REACT_APP_API_BASE_URL}/api`
 
 export const getSavedAuthTokens = () => window.localStorage.getItem("accessToken")
 
