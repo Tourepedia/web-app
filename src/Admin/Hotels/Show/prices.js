@@ -26,33 +26,33 @@ export const List = ({ prices, match }) => {
   return <Table hover condensed bordered style={{ tableLayout: "fixed" }}>
     <thead>
       <tr>
+        <th>Start Date</th>
+        <th>End Date</th>
         <th>Location</th>
         <th>Room Type</th>
         <th>Meal Plan</th>
-        <th>Adults WEB</th>
-        <th>Child WEB</th>
-        <th>Child WoEB</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Price (INR)</th>
+        <th title="Base Price">Base</th>
+        <th title="Adult with extra bed price">Adult WEB</th>
+        <th title="Child with extra bed price">Child WEB</th>
+        <th title="Child without extra bed price">Child WoEB</th>
       </tr>
     </thead>
     <tbody>
       {prices.map((p, i) => (
         <tr key={p.id}>
-          <td>{p.locations.map(l => l.short_name).join(", ")}</td>
-          <td>{p.room_types.map(rt => rt.name).join(", ")}</td>
-          <td>{p.meal_plans.map(mp => mp.name).join(", ")}</td>
-          <td>{p.adults_with_extra_bed}</td>
-          <td>{p.children_with_extra_bed}</td>
-          <td>{p.children_without_extra_bed}</td>
           <td>
             <DatePicker readOnly dateFormat="DD MMM, YYYY" defaultValue={p.start_date} />
           </td>
           <td>
             <DatePicker readOnly dateFormat="DD MMM, YYYY" defaultValue={p.end_date} />
           </td>
-          <td>{p.prices.map(p => p.value).join(", ")}</td>
+          <td>{p.location.short_name}</td>
+          <td>{p.room_type.name}</td>
+          <td>{p.meal_plan.name}</td>
+          <td>{p.base_price}</td>
+          <td>{p.a_w_e_b}</td>
+          <td>{p.c_w_e_b}</td>
+          <td>{p.c_wo_e_b}</td>
         </tr>))}
     </tbody>
   </Table>

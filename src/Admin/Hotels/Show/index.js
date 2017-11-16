@@ -67,7 +67,7 @@ export class ShowItem extends Component {
             </p>
           </section>
         </Col>
-        <Col sm={6}>
+        <Col sm={4}>
           <section id="hotel-meal-plans">
             <h4>
               <Link to={`${match.url}#hotel-meal-plans`}>#</Link>
@@ -80,6 +80,15 @@ export class ShowItem extends Component {
                 : <span className="text-muted">Not Set</span>
               }
             </p>
+          </section>
+        </Col>
+        <Col sm={2}>
+          <section id="hotel-eb-child-age-interval">
+            <h4>
+              <Link to={`${match.url}#hotel-eb-child-age-interval`}>#</Link>
+              <span> Extra Bed Child</span>
+            </h4>
+            <p>{item.eb_child_age_start} to {item.eb_child_age_end} yrs</p>
           </section>
         </Col>
       </Row>

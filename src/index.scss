@@ -14,3 +14,69 @@ html, body {
 a.active {
   color: purple;
 }
+
+
+.table td > .table {
+  &:last-child {
+    margin-bottom: 0
+  }
+
+  > tbody > tr:first-child > td{
+    border-top: none;
+  }
+}
+
+.table {
+  &-condensed td > .table {
+    margin-left: -5px;
+    margin-right: -5px;
+    width: calc(100% + 10px);
+    max-width: calc(100% + 10px);
+
+    &:first-child {
+      margin-top: -5px;
+    }
+
+    &:last-child {
+      margin-bottom: -5px;
+    }
+  }
+  &-bordered td > .table.table-bordered {
+    border-left: none;
+    border-right: none;
+    > tbody > tr > td{
+      &:first-child {
+        border-left: none;
+      }
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+    &:first-child {
+      border-top: none;
+      > tbody > tr > td {
+        border-top: none;
+      }
+    }
+    &:last-child {
+      border-bottom: none;
+      > tbody > tr > td {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+.table td .form-group:last-child {
+  margin-bottom: 0
+}
+
+.input-group {
+  width: 100%;
+}
+
+
+.show-overflowed, .show-overflowed .media-body {
+  overflow: visible;
+}

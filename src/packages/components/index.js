@@ -23,6 +23,7 @@ import {
     Alert,
     InputGroup,
     Glyphicon,
+    Media,
 } from 'react-bootstrap'
 import { LinkContainer } from "react-router-bootstrap"
 
@@ -68,5 +69,6 @@ export {
     Alert,
     InputGroup,
     Glyphicon,
+    Media,
 }
 

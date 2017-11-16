@@ -1,0 +1,12 @@
+.Select {
+  &.is-focused {
+    z-index: 100;
+  }
+  &--multi &-value{
+    display: inline-table;
+
+    &-icon, &-label {
+      display: table-cell;
+    }
+  }
+}

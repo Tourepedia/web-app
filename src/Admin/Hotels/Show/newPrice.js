@@ -4,9 +4,9 @@ import { connect } from "react-redux"
 
 import { LinkContainer } from "react-router-bootstrap"
 
-import { Button, Panel, Alert, Form, FormGroup, ControlLabel, FormControl, Row, Col, InputGroup } from "components"
+import { Button, Panel, Alert, Form, FormGroup, ControlLabel, FormControl, Row, Col, Table } from "components"
 
-import { DatePicker } from "components/DateTime"
+import { DateRangePickerList } from "components/DateTime"
 
 import { default as Sel, withAutoSelect } from "components/Select/"
 
@@ -14,20 +14,31 @@ import * as listModel from "listModel"
 
 import { addPrice } from "./../store"
 
-const ALLOWED_EXTRA_BEDS = [0, 1, 2, 3, 4, 5].map(i => <option value={i} key={i}>{i}</option>)
+import { getServerTimestamp } from "timestamp"
 
 const Select = withAutoSelect(Sel)
 
+const PRICE_TYPES = [{
+  key: "base_price",
+  value: "Base Price",
+}, {
+  key: "a_w_e_b",
+  value: "Adult with exta bed",
+}, {
+  key: "c_w_e_b",
+  value: "Child with extra bed",
+}, {
+  key: "c_wo_e_b",
+  value: "Child without extra bed",
+}]
+
 export class NewPrice extends Component {
-  state = {
-    created: false
-  }
   constructor (...args) {
     super(...args)
     this.state = {
-      startDate: undefined,
-      endDate: undefined
+      created: false
     }
+    this.mealPlansInputRef = {}
   }
 
   componentWillReceiveProps (nextProps) {
@@ -57,29 +68,40 @@ export class NewPrice extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
 
+
+    const intervals = this.dateIntervalRef.value.map(interval => ({
+      start_date: getServerTimestamp(interval.startDate),
+      end_date: getServerTimestamp(interval.endDate)
+    }))
+
     const locations = this.inputLocationsRef.value.map(i => i.value)
     const room_types = this.inputRoomTypesRef.value.map(i => i.value)
-    const meal_plans = this.inputMealPlansRef.value.map(i => i.value)
-    const adults_web = this.inputAdultsWEBRef.value
-    const child_web = this.inputChildWEBRef.value
-    const child_woeb = this.inputChildWoEBRef.value
-    const start_date = this.inputStartDateRef.value.utc().format("YYYY-MM-DD HH:mm:ss")
-    const end_date = this.inputEndDateRef.value.utc().format("YYYY-MM-DD HH:mm:ss")
-    const price = this.inputPriceRef.value
+    const meal_plans = {}
+
+    for (let mp in this.mealPlansInputRef) {
+      if (this.mealPlansInputRef.hasOwnProperty(mp)) {
+        if (!meal_plans[mp]) {
+          meal_plans[mp] = {}
+        }
+        const prices = this.mealPlansInputRef[mp]
+        for (let pt in prices) {
+          if (prices.hasOwnProperty(pt)) {
+            meal_plans[mp][pt] = prices[pt].value ? parseInt(prices[pt].value, 10) : 0
+          }
+        }
+      }
+    }
 
     const { addPrice } = this.props
 
-    addPrice({
+    const data = {
+      intervals,
       locations,
-        room_types,
-        meal_plans,
-        adults_web,
-        child_web,
-        child_woeb,
-        start_date,
-        end_date,
-        price
-      });
+      room_types,
+      meal_plans,
+    }
+
+    addPrice(data);
   }
 
   handleCloseCreatedAlert = (e) => {
@@ -92,7 +114,7 @@ export class NewPrice extends Component {
   render () {
     const { hotel, match } = this.props
     const { locations, meal_plans, room_types } = hotel
-    const { startDate, endDate, created } = this.state
+    const { created } = this.state
     return (created ? (
       <Alert onDismiss={this.handleCloseCreatedAlert}>
         <h4>Success!!</h4>
@@ -110,97 +132,78 @@ export class NewPrice extends Component {
       ) : (<Panel bsStyle="info">
       <Form onSubmit={this.handleSubmit}>
         <Row>
-          <Col sm={4}>
-            <FormGroup controlId="newPrice_location">
-              <ControlLabel>Location *</ControlLabel>
-              <Select name="locations[]" multi required autoFocus options={locations.map(l =>
-                ({ label: l.short_name, value: l.id, title: l.name }))} inputRef={ref => { this.inputLocationsRef = ref }} />
+          <Col md={4}>
+            <FormGroup controlId="newPrice_dates">
+              <ControlLabel>Date interval(s) *</ControlLabel>
+              <DateRangePickerList
+                autoFocus
+                dateFormat="DD MMM YYYY"
+                required
+                ref={ref => { this.dateIntervalRef = ref }} />
             </FormGroup>
           </Col>
-          <Col sm={4}>
-            <FormGroup controlId="newPrice_room-type">
-              <ControlLabel>Room Type *</ControlLabel>
-              <Select name="room_types[]" multi required options={room_types.map(rt =>
-                ({ label: rt.name, value: rt.id, title: rt.description }))} inputRef={ref => { this.inputRoomTypesRef = ref }} />
-            </FormGroup>
-          </Col>
-          <Col sm={4}>
-            <FormGroup controlId="newPrice_meal-plan">
-              <ControlLabel>Meal Plan *</ControlLabel>
-              <Select name="meal_plans[]" multi required options={meal_plans.map(mp =>
-                ({ label: mp.name, value: mp.id, title: mp.description }))} inputRef={ref => { this.inputMealPlansRef = ref }} />
-            </FormGroup>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={4}>
-            <FormGroup controlId="newPrice_adults-with-extra-bed">
-              <ControlLabel>Adults with extra bed</ControlLabel>
-              <FormControl componentClass="select" name="adults_web" inputRef={ref => { this.inputAdultsWEBRef = ref }}>
-                {ALLOWED_EXTRA_BEDS}
-              </FormControl>
-            </FormGroup>
-          </Col>
-          <Col sm={4}>
-            <FormGroup controlId="newPrice_child-with-extra-bed">
-              <ControlLabel>Children with extra bed</ControlLabel>
-              <FormControl componentClass="select" name="child_web" inputRef={ref => { this.inputChildWEBRef = ref }}>
-                {ALLOWED_EXTRA_BEDS}
-              </FormControl>
-            </FormGroup>
-          </Col>
-          <Col sm={4}>
-            <FormGroup controlId="newPrice_child-without-extra-bed">
-              <ControlLabel>Children without extra bed</ControlLabel>
-              <FormControl componentClass="select" name="child_woeb" inputRef={ref => { this.inputChildWoEBRef = ref }}>
-                {ALLOWED_EXTRA_BEDS}
-              </FormControl>
-            </FormGroup>
-          </Col>
-          <Col sm={4}>
-            <FormGroup controlId="newPrice_start-date">
-              <ControlLabel>Start Date</ControlLabel>
-              <DatePicker
-                inputProps={{
-                  name: "start_date",
-                  required: true,
-                }}
-                endDate={endDate}
-                onChange={this.handleStartDateChange}
-                viewMode="months"
-                inputRef={ref => { this.inputStartDateRef = ref }}
-                />
-            </FormGroup>
-          </Col>
-          <Col sm={4}>
-            <FormGroup controlId="newPrice_end-date">
-              <ControlLabel>End Date</ControlLabel>
-              <DatePicker
-                inputProps={{
-                  name: "end_date",
-                  required: true,
-                }}
-                startDate={startDate}
-                onChange={this.handleEndDateChange}
-                viewMode="months"
-                inputRef={ref => { this.inputEndDateRef = ref }}
-                />
-            </FormGroup>
-          </Col>
-          <Col sm={4}>
-            <FormGroup controlId="newPrice_price">
-              <ControlLabel>Price</ControlLabel>
-              <InputGroup>
-                <InputGroup.Addon>INR</InputGroup.Addon>
-                <FormControl
-                  type="number"
-                  name="price"
-                  placeholder="2000"
-                  required
-                  inputRef={ref => { this.inputPriceRef = ref }}
-                />
-              </InputGroup>
-            </FormGroup>
+          <Col md={8}>
+            <Row>
+              <Col sm={6}>
+                <FormGroup controlId="newPrice_location">
+                  <ControlLabel>Location *</ControlLabel>
+                  <Select
+                    name="locations[]"
+                    multi
+                    required
+                    options={locations.map(l =>
+                      ({ label: l.short_name, value: l.id, title: l.name }))}
+                    defaultValue={locations.map(l =>
+                      ({ label: l.short_name, value: l.id, title: l.name }))}
+                    inputRef={ref => { this.inputLocationsRef = ref }} />
+                </FormGroup>
+              </Col>
+              <Col sm={6}>
+                <FormGroup controlId="newPrice_room-type">
+                  <ControlLabel>Room Type *</ControlLabel>
+                  <Select
+                    name="room_types[]"
+                    multi
+                    options={room_types.map(rt =>
+                      ({ label: rt.name, value: rt.id, title: rt.description }))}
+                    inputRef={ref => { this.inputRoomTypesRef = ref }} />
+                </FormGroup>
+              </Col>
+              <Col sm={12}>
+                <Table bordered condensed>
+                  <thead>
+                    <tr>
+                      <th className="text-muted text-center">INR</th>
+                      {PRICE_TYPES.map(type => <th key={type.key}>{type.value}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {meal_plans.map(mp =>
+                      (<tr key={mp.name}>
+                        <th title={mp.description} className="text-right">{mp.name}</th>
+                        {PRICE_TYPES.map(type => <td key={type.key} style={{ padding: 0 }}>
+                          <FormGroup bsSize="sm">
+                            <FormControl
+                              type="number"
+                              name={`${mp.name}_${type.key}_price`}
+                              placeholder="2000"
+                              min="1"
+                              defaultValue="1000"
+                              inputRef={ref => {
+                                if (!this.mealPlansInputRef[mp.id]) {
+                                  this.mealPlansInputRef[mp.id] = {}
+                                }
+                                this.mealPlansInputRef[mp.id][type.key] = ref
+                              }}
+                            />
+                          </FormGroup>
+                        </td>)}
+                      </tr>
+                      ))}
+                  </tbody>
+                </Table>
+              </Col>
+            </Row>
           </Col>
         </Row>
         <FormGroup>
@@ -208,7 +211,7 @@ export class NewPrice extends Component {
             Submit
           </Button>
           {" "}
-          <LinkContainer to={match.url.split("/").slice(0, -1).join("/")}>
+          <LinkContainer to={match.url.split("/").slice(0, -1).join("/")} exact>
             <Button>
               Cancel
             </Button>

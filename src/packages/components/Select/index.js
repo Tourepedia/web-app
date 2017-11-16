@@ -5,13 +5,21 @@ import getDisplayName from "getDisplayName"
 
 import "react-select/dist/react-select.min.css"
 
+import "./selectStyles.css"
+
 export const withAutoSelect = (WrappedSelect = Select) => class Wrapper extends Component {
   static displayName = `WithAuto${getDisplayName(WrappedSelect)}`
-  state = {
-    value: undefined
-  }
+
   get value () {
     return this.state.value
+  }
+
+  constructor (...args) {
+    super(...args)
+    const { defaultValue } = this.props
+    this.state = {
+      value: defaultValue
+    }
   }
 
   componentDidMount () {

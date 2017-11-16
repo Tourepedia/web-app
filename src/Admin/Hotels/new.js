@@ -16,6 +16,8 @@ export class NewItem extends Component {
     super(...args)
     this.state = {
       name: "",
+      e_b_child_age_start: 6,
+      e_b_child_age_end: 12,
       dirty: {},
       created: false
     }
@@ -41,6 +43,14 @@ export class NewItem extends Component {
     this.setState({ name: e.target.value, dirty: { name: true } });
   }
 
+  handleEBChildStartAge = (e) => {
+    this.setState({ e_b_child_age_start: e.target.value, dirty: { name: true } });
+  }
+
+  handleEBChildEndAge = (e) => {
+    this.setState({ e_b_child_age_end: e.target.value, dirty: { name: true } });
+  }
+
   handleCreateSubmit = (e) => {
     e.preventDefault()
 
@@ -49,8 +59,18 @@ export class NewItem extends Component {
     const locations = this.inputLocationsRef.value.map(l => l.value)
     const mealPlans = this.inputMealPlansRef.value.map(l => l.value)
     const roomTypes = this.inputRoomTypesRef.value.map(l => l.value)
+    const ebChildStartAgeRef = parseInt(this.inputEBChildStartAgeRef.value, 10)
+    const ebChildEndAgeRef = parseInt(this.inputEBChildEndAgeRef.value, 10)
 
-    create({ name, locations, mealPlans, roomTypes })
+    const data = {
+      name,
+      locations,
+      mealPlans,
+      roomTypes,
+      eb_child_age_start: ebChildStartAgeRef,
+      eb_child_age_end: ebChildEndAgeRef
+    }
+    create(data)
   }
 
   handleCloseCreatedAlert = (e) => {
@@ -135,6 +155,39 @@ export class NewItem extends Component {
               <Col sm={10}>
                 <RoomTypesSelect ref={ref => { this.inputRoomTypesRef = ref }} />
                 <HelpBlock>Select room types provided by the hotel.</HelpBlock>
+              </Col>
+            </FormGroup>
+            <FormGroup
+              controlId="newHotel_e_b_child_start_age">
+              <Col componentClass={ControlLabel} sm={2}>
+                Extra bed child age
+              </Col>
+              <Col sm={4}>
+                <FormControl
+                  type="number"
+                  value={this.state.e_b_child_age_start}
+                  placeholder="6"
+                  required
+                  minLength="1"
+                  inputRef={ref => { this.inputEBChildStartAgeRef = ref }}
+                  onChange={this.handleEBChildStartAge}
+                />
+                <HelpBlock>Starting age of child (yrs).</HelpBlock>
+              </Col>
+              <Col sm={1} className="text-center">
+                --
+              </Col>
+              <Col sm={4}>
+                <FormControl
+                  type="number"
+                  value={this.state.e_b_child_age_end}
+                  placeholder="7"
+                  required
+                  minLength={this.state.e_b_child_age_start}
+                  inputRef={ref => { this.inputEBChildEndAgeRef = ref }}
+                  onChange={this.handleEBChildEndAge}
+                />
+                <HelpBlock>Ending age of child (yrs).</HelpBlock>
               </Col>
             </FormGroup>
             <FormGroup>

@@ -1,7 +1,9 @@
 import axios from "axios"
+import qs from "qs"
 
 // some default configuration
 // axios.defaults.withCredentials = true
+axios.defaults.headers.common["Content-Type"] = "application/x-www-form-urlencoded"
 
 // prevent the default xsrf header addition
 axios.defaults.xsrfCookieName = undefined
@@ -30,6 +32,7 @@ const requestSuccessInterceptor = (config = {}) => {
     case "delete":
     return {
       ...config,
+      data: qs.stringify(config.data),
       headers: {
         ...config.headers,
         "Authorization": `Bearer ${authToken}`

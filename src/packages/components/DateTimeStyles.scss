@@ -1,0 +1,139 @@
+.rdt {
+
+  .form-control:read-only {
+    background-color: white;
+  }
+  .form-control:disabled {
+    background-color: whitesmoke;
+  }
+  &-range {
+
+    &-list {
+      &__item {
+        display: table;
+        width: 100%;
+        border-collapse: separate;
+        margin-bottom: 10px;
+        &__picker, &__remover {
+          display: table-cell;
+          vertical-align: middle;
+        }
+
+        &__picker {
+          width: 100%;
+        }
+
+        &__remover {
+          min-width: 1%;
+          margin-left: 10px;
+          padding: 0;
+          background-color: transparent;
+          border: none;
+          box-shadow: none;
+          position: relative;
+          font-size: 22px;
+          font-weight: normal;
+          color: red;
+          text-align: center;
+          outline: none;
+
+          &::focus {
+            border-color: #66afe9;
+            outline: 0;
+          }
+
+        }
+      }
+    }
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+    &__date, &__divider {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    &__divider {
+      width: 20px;
+      text-align: center;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: calc(50% - 2px);
+        left: 4px;
+        right: 4px;
+        height: 4px;
+        background-color: #ccc;
+        border-radius: 1px;
+      }
+    }
+
+    &__date {
+      width: 100%;
+    }
+  }
+  &--clearable {
+    width: 100%;
+    display: table;
+    border-collapse: separate;
+    position: relative;
+
+    .form-control {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  &__cleaner {
+    padding: 6px 0;
+    font-size: 14px;
+    font-weight: normal;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+
+    &::focus {
+      border-color: #66afe9;
+      outline: 0;
+    }
+
+    &:disabled {
+      cursor: not-allowed
+    }
+  }
+
+  &--clearable &, &__cleaner {
+    display: table-cell;
+  }
+
+
+  &__cleaner {
+    width: 20px;
+  }
+
+  &--clearable & {
+    width: 100%;
+  }
+
+  &--clearable &__cleaner {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  &--clearable &__cleaner:last-child {
+    border-left: none;
+  }
+  &--clearable &__cleaner:first-child {
+    border-right: none;
+  }
+}

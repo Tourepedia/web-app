@@ -29,8 +29,14 @@ export class NewItem extends Component {
     const { create } = this.props
     const name = this.inputNameRef.value.trim()
     const description = this.inputDescriptionRef.value.trim()
+    const no_of_beds = parseInt(this.inputNoOfBedsRef.value, 10)
+    const adult_extra_beds = parseInt(this.inputAllowedAdultExtraBed.value, 10)
+    const child_extra_beds = parseInt(this.inputAllowedChildExtraBed.value, 10)
+    const allowed_both_extra_beds = this.inputAllowedBothExtraBeds.checked ? 1 : 0
 
-    create({ name, description })
+    const data = { name, description, no_of_beds, adult_extra_beds, child_extra_beds, allowed_both_extra_beds }
+
+    create(data)
   }
 
   handleCloseCreatedAlert = (e) => {
@@ -99,6 +105,74 @@ export class NewItem extends Component {
                 />
                 <FormControl.Feedback />
                 <HelpBlock>Some description about the room type.</HelpBlock>
+              </Col>
+            </FormGroup>
+            <FormGroup
+              controlId="newHotelRoomType_no_of_beds">
+              <Col componentClass={ControlLabel} sm={2}>
+                No. of Beds *
+              </Col>
+              <Col sm={10}>
+                <FormControl
+                  type="number"
+                  placeholder="2"
+                  min="1"
+                  defaultValue="2"
+                  required
+                  inputRef={ref => { this.inputNoOfBedsRef = ref }}
+                />
+                <FormControl.Feedback />
+                <HelpBlock>Number of base beds allowed in the room.</HelpBlock>
+              </Col>
+            </FormGroup>
+            <FormGroup
+              controlId="newHotelRoomType_allowed_adult_extra_bed">
+              <Col componentClass={ControlLabel} sm={2}>
+                Adult Extra Beds *
+              </Col>
+              <Col sm={10}>
+                <FormControl
+                  type="number"
+                  placeholder="2"
+                  min="0"
+                  defaultValue="1"
+                  required
+                  inputRef={ref => { this.inputAllowedAdultExtraBed = ref }}
+                />
+                <FormControl.Feedback />
+                <HelpBlock>Number of allowed extra bed for adults.</HelpBlock>
+              </Col>
+            </FormGroup>
+            <FormGroup
+              controlId="newHotelRoomType_allowed_child_extra_bed">
+              <Col componentClass={ControlLabel} sm={2}>
+                Child Extra Beds *
+              </Col>
+              <Col sm={10}>
+                <FormControl
+                  type="number"
+                  placeholder="2"
+                  min="0"
+                  defaultValue="1"
+                  required
+                  inputRef={ref => { this.inputAllowedChildExtraBed = ref }}
+                />
+                <FormControl.Feedback />
+                <HelpBlock>Number of allowed extra bed for children.</HelpBlock>
+              </Col>
+            </FormGroup>
+            <FormGroup
+              controlId="newHotelRoomType_allow_both_extra_beds">
+              <Col componentClass={ControlLabel} sm={2}>
+                Allow Both Extra Beds *
+              </Col>
+              <Col sm={10}>
+                <FormControl
+                  type="checkbox"
+                  inputRef={ref => { this.inputAllowedBothExtraBeds = ref }}
+                />
+                <FormControl.Feedback />
+                <HelpBlock>Are adult and child extra beds allowed at the same time in a room.</HelpBlock>
               </Col>
             </FormGroup>
             <FormGroup>
