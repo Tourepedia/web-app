@@ -50,7 +50,10 @@ export class ShowItem extends Component {
             {date.fromNow()}
           </p>
         ) : null}
-        <h1 className="media-heading">{item.subject}</h1>
+        <h1>{item.subject}</h1>
+        {item.assignees && item.assignees.length ? <p>Assigned To: {item.assignees
+          .map(user => user.name)
+          .join(", ")}</p> : null}
         <p style={{ whiteSpace: "pre-wrap" }} className="text-muted">{item.description}</p>
       </div>
     </Panel>)

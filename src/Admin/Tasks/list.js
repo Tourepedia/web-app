@@ -43,7 +43,7 @@ export class ListItems extends Component {
       <thead>
         <tr>
           <th style={{ width: "30px" }}>#</th>
-          <th style={{ width: "80%" }}>Description</th>
+          <th style={{ width: "70%" }}>Description</th>
           <th>Due Date</th>
           <th>By</th>
         </tr>
@@ -65,6 +65,9 @@ export class ListItems extends Component {
                 }} className="word--ellipsis">
                   <b>{item.subject}</b>&nbsp;-&nbsp;{item.description}
                 </Link>
+                {item.assignees && item.assignees.length ? <div className="word--ellipsis">Assigned To: {item.assignees
+                .map(user => user.name)
+                .join(", ")}</div> : null}
               </td>
               <td title={date && date.format("YYYY-MM-DD HH:mm:ss")}>
                 {date ? date.fromNow() : <span className="text-muted">Not set</span>}

@@ -2,12 +2,14 @@ import React, { Component } from "react"
 
 import { connect } from "react-redux"
 
-import { Panel, Form, FormGroup, FormControl, ControlLabel, HelpBlock, Col, Button, Alert } from "components"
+import { Panel, Form, FormGroup, FormControl, ControlLabel, Col, Button, Alert } from "components"
 import { createItem } from "./store"
 import { LinkContainer } from "react-router-bootstrap"
 import DatePicker from "components/DateTime"
 import * as listModel from "listModel"
 import { getServerTimestamp } from "timestamp"
+import UserSelect from "./../Users/userSelect"
+
 const TODAY = new Date()
 
 export class NewItem extends Component {
@@ -32,6 +34,7 @@ export class NewItem extends Component {
     const subject = this.inputSubjectRef.value.trim()
     const description = this.inputDescriptionRef.value.trim()
     const due_date = this.inputDueDateRef.value
+    const assignees = this.inputAssigneesRef.value
     if (due_date) {
       due_date.set({ hour: "23", minute: "59", second: "59" })
     }
@@ -40,6 +43,7 @@ export class NewItem extends Component {
       subject,
       description,
       due_date: getServerTimestamp(due_date),
+      assignees: (assignees || []).map(assignee => assignee.value)
     }
     create(data)
   }
@@ -119,10 +123,21 @@ export class NewItem extends Component {
               <Col sm={10}>
                 <DatePicker
                   name="due_date"
-                  inputTZ="local"
                   defaultValue={TODAY}
                   viewMode="days"
                   inputRef={ref => { this.inputDueDateRef = ref }}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup
+              controlId="newTask_assignees">
+              <Col componentClass={ControlLabel} sm={2}>
+                Assignees
+              </Col>
+              <Col sm={10}>
+                <UserSelect
+                  multi
+                  ref={ref => { this.inputAssigneesRef = ref }}
                 />
               </Col>
             </FormGroup>
