@@ -23,7 +23,7 @@ export const List = ({ prices, match }) => {
       </LinkContainer>
     </div>
   }
-  return <Table hover condensed bordered style={{ tableLayout: "fixed" }}>
+  return <Table hover condensed bordered responsive>
     <thead>
       <tr>
         <th>Start Date</th>

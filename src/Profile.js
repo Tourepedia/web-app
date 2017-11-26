@@ -27,9 +27,9 @@ export const Info = connect(
   dispatch => ({ logout: (...args) => dispatch(logout(...args))})
   )(Info_)
 
-export const Profile = ({ match }) => <Grid>
+export const Profile = ({ match }) => <Grid fluid>
   <Row>
-    <Col xs={3}>
+    <Col xs={4} sm={3} md={2}>
       <ListGroup>
         <ListGroupItem>Personal Settings</ListGroupItem>
         <LinkContainer to={match.path} exact>
@@ -37,7 +37,7 @@ export const Profile = ({ match }) => <Grid>
         </LinkContainer>
       </ListGroup>
     </Col>
-    <Col xs={9}>
+    <Col xs={8} sm={9} md={10}>
       <Switch>
         <Route path={match.path} component={Info} />
       </Switch>

@@ -11,6 +11,10 @@ html, body {
     padding: 0;
 }
 
+body {
+  padding-top: 60px; // to handle the navbar fixed top
+}
+
 a.active {
   color: purple;
 }
@@ -79,4 +83,11 @@ a.active {
 
 .show-overflowed, .show-overflowed .media-body {
   overflow: visible;
+}
+.word--ellipsis {
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
 }

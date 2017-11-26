@@ -9,10 +9,13 @@ import {
 } from "components"
 
 import { LinkContainer } from "react-router-bootstrap"
-import WithPermission from "components/WithPermission"
+import withPermission from "components/WithPermission"
+
+const WithCanSeePermission = withPermission((props) => <LinkContainer {...props} />, "can_see_admin_dashboard")
+
 
 export const header = () => (
-  <Navbar staticTop fluid>
+  <Navbar fixedTop fluid inverse collapseOnSelect>
     <Navbar.Header>
       <Navbar.Brand>
         <Link to="/">{ process.env.REACT_APP_APPLICATION_NAME }</Link>
@@ -30,11 +33,9 @@ export const header = () => (
         <LinkContainer eventKey={3} to="/profile">
           <NavItem>User</NavItem>
         </LinkContainer>
-        <WithPermission permission="can_see_admin_dashboard">
-          <LinkContainer eventKey={4} to="/a">
-            <NavItem>Admin</NavItem>
-          </LinkContainer>
-        </WithPermission>
+        <WithCanSeePermission eventKey={4} to="/a">
+          <NavItem>Admin</NavItem>
+        </WithCanSeePermission>
       </Nav>
     </Navbar.Collapse>
 </Navbar>)

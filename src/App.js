@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+ import React, { Component } from 'react';
 
 import {
     BrowserRouter as Router,
@@ -50,4 +50,4 @@ class App extends Component {
   }
 }
 
-export default connect(undefined, dispatch => ({ getUserInfo: _ => dispatch(getUserInfo()) }))(App);
+export default connect(undefined, { getUserInfo })(App);

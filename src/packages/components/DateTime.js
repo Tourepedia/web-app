@@ -7,7 +7,7 @@ import classnames from "classnames"
 import uid from "tpuid"
 import "react-datetime/css/react-datetime.css"
 import "./DateTimeStyles.css"
-
+DateTime.displayName = DateTime.displayName || "DateTime"
 export class DatePicker extends Component {
 
   // this is from react-bootstrap formGroup controlId
@@ -88,7 +88,7 @@ export class DatePicker extends Component {
 
   render () {
     const { independent, startDate, endDate, onChange, readOnly, componentClass: Component,
-      dateFormat, clearable, isValidDate,
+      dateFormat, clearable, isValidDate, defaultValue,
       inputClassName, name, placeholder, id, autoComplete, disabled, autoFocus, required, ...otherProps } = this.props
 
     // control id passed from formGroup

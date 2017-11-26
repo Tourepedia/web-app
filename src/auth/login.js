@@ -15,7 +15,7 @@ import {
     // Checkbox,
 } from "components"
 
-import { LinkContainer } from "react-router-bootstrap"
+// import { LinkContainer } from "react-router-bootstrap"
 
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
@@ -60,11 +60,24 @@ class Login extends Component {
       <div>
         <Grid>
           <Row>
-            <Col mdOffset={2} md={8}>
-              <Panel header={<h3> <span className="pull-right text-warning">
-                You must log in to view the page at {from.pathname}
-              </span> Login</h3>}>
-                <Form horizontal onSubmit={this.login}>
+            <Col mdOffset={2} md={8} lgOffset={3} lg={6}>
+              <Form horizontal onSubmit={this.login}>
+                <Panel header={<h3>Login</h3>} footer={<Row>
+                  <Col smOffset={4} sm={6}>
+                    {user.status === "authenticating" ? (
+                          <Button type="button" bsStyle="info" disabled>
+                            Signing in
+                          </Button>
+                          ) : (
+                          <Button type="submit" bsStyle="primary">
+                            Sign in
+                          </Button>
+                          )}
+                        {/* <LinkContainer to="/forgot-password">
+                          <Button bsStyle="link">Forgot your password ?</Button>
+                        </LinkContainer> */}
+                  </Col>
+                </Row>} bsStyle="primary">
                   <FormGroup controlId="formHorizontalEmail">
                     <Col componentClass={ControlLabel} sm={4}>
                       Email
@@ -90,25 +103,8 @@ class Login extends Component {
                       <Checkbox>Remember me</Checkbox>
                     </Col>
                   </FormGroup>*/}
-
-                  <FormGroup>
-                    <Col smOffset={4} sm={6}>
-                      {user.status === "authenticating" ? (
-                        <Button type="button" bsStyle="info" disabled>
-                          Signing in
-                        </Button>
-                        ) : (
-                        <Button type="submit" bsStyle="primary">
-                          Sign in
-                        </Button>
-                        )}
-                      <LinkContainer to="/forgot-password">
-                        <Button bsStyle="link">Forgot your password ?</Button>
-                      </LinkContainer>
-                    </Col>
-                  </FormGroup>
-                </Form>
-              </Panel>
+                </Panel>
+              </Form>
             </Col>
           </Row>
         </Grid>

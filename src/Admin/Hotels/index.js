@@ -76,7 +76,7 @@ export class View extends Component {
       // add the new into breadcrumb
       breadcrumb.push({
         to: `${match.url}/new`,
-        label: "Add New"
+        label: "New"
       })
     }
 
@@ -100,7 +100,7 @@ export class View extends Component {
       // add the new into breadcrumb
       breadcrumb.push({
         to: `${match.url}/room-types/new`,
-        label: "Add New"
+        label: "New"
       })
     }
 
@@ -108,7 +108,7 @@ export class View extends Component {
       // add the new into breadcrumb
       breadcrumb.push({
         to: `${match.url}/meal-plans/new`,
-        label: "Add New"
+        label: "New"
       })
     }
 
@@ -124,13 +124,13 @@ export class View extends Component {
       <Breadcrumb breadcrumb={breadcrumb}>
         <Switch>
           <Route path={`${match.url}/room-types`}>
-            <NavLink className="pull-right" to={`${match.url}/room-types/new`}>Add New Room Type</NavLink>
+            <NavLink className="pull-right" to={`${match.url}/room-types/new`}>Add</NavLink>
           </Route>
           <Route path={`${match.url}/meal-plans`}>
-            <NavLink className="pull-right" to={`${match.url}/meal-plans/new`}>Add New Meal Plan</NavLink>
+            <NavLink className="pull-right" to={`${match.url}/meal-plans/new`}>Add</NavLink>
           </Route>
           <Route>
-            <NavLink className="pull-right" to={`${match.url}/new`}>Add New Hotel</NavLink>
+            <NavLink className="pull-right" to={`${match.url}/new`}>Add</NavLink>
           </Route>
         </Switch>
       </Breadcrumb>
