@@ -39,12 +39,12 @@ export class ListItems extends Component {
       </Panel>
     }
 
-    return  <Table responsive striped bordered condensed hover style={{ width: "100%", tableLayout: "fixed" }}>
+    return  <Table responsive striped bordered condensed>
       <thead>
         <tr>
-          <th style={{ width: "30px" }}>#</th>
-          <th style={{ width: "70%" }}>Description</th>
-          <th>Due Date</th>
+          <th>#</th>
+          <th >Description</th>
+          <th style={{ minWidth: "80px" }}>Due Date</th>
           <th>By</th>
         </tr>
       </thead>
@@ -65,7 +65,7 @@ export class ListItems extends Component {
                 }} className="word--ellipsis">
                   <b>{item.subject}</b>&nbsp;-&nbsp;{item.description}
                 </Link>
-                {item.assignees && item.assignees.length ? <div className="word--ellipsis">Assigned To: {item.assignees
+                {item.assignees && item.assignees.length ? <div>Assigned To: {item.assignees
                 .map(user => user.name)
                 .join(", ")}</div> : null}
               </td>
