@@ -1,4 +1,10 @@
-export default function getDisplayName(Component) {
+// @flow
+type Component = {
+  displayName?: string,
+  name?: string
+};
+
+export default function getDisplayName(Component: Component): string {
   return (
     Component.displayName ||
     Component.name ||

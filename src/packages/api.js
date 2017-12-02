@@ -1,3 +1,4 @@
+// @flow
 import axios from "axios"
 import qs from "qs"
 
@@ -9,20 +10,37 @@ axios.defaults.headers.common["Content-Type"] = "application/x-www-form-urlencod
 axios.defaults.xsrfCookieName = undefined
 
 
-axios.defaults.baseURL = `${process.env.REACT_APP_API_BASE_URL}/api`
+axios.defaults.baseURL = `${process.env.REACT_APP_API_BASE_URL || ""}/api`
 
 export const getSavedAuthTokens = () => window.localStorage.getItem("accessToken")
 
-export const updateAuthTokens = (accessToken) => {
+export const updateAuthTokens = (accessToken: string): void => {
   window.localStorage.setItem("accessToken", accessToken)
 }
 
-export const removeAuthTokens = () => {
+export const removeAuthTokens = (): void => {
   window.localStorage.removeItem("accessToken")
 }
 
+type Config = {
+  method?: "get" | "post" | "patch" | "put" | "delete",
+  headers?: {},
+  data?: {},
+  noInterceptor?: boolean,
+  noRequestInterceptor?: boolean,
+  noResponseInterceptor?: boolean,
+};
+type State = {
+  user?: {
+    data?: {
+      id: number
+    }
+  },
+  routing?: {}
+};
+type Routing = {};
 
-const requestSuccessInterceptor = (config = {}) => {
+const requestSuccessInterceptor = (config: Config = {}, routing: Routing) => {
   const authToken = getSavedAuthTokens()
   switch (config.method) {
     case "get":
@@ -56,7 +74,7 @@ const resposeFailedInterceptor = (error, routing = {}) => {
   return Promise.reject(data || error)
 }
 
-const createAPI = (config = {}, routing = {}) => {
+const createAPI = (config: Config = {}, routing: Routing = {}) => {
   // create an instance as we would with normal axios
   // extract some custom options
   const { noInterceptor, noRequestInterceptor, noResponseInterceptor } = config
@@ -84,18 +102,16 @@ const createAPI = (config = {}, routing = {}) => {
   return instance
 }
 
-export const ajax = (state = {}) => {
+export const ajax = (state: State = {}) => {
   const { user = {}, routing } = state
   const { data = {} } = user
   const userId = data.id
-  const communityId = data.communityId
   const baseURL = axios.defaults.baseURL
   axios.withCreate = true
   return {
     userId,
-    communityId,
     baseURL,
-    createAPI: (config) => createAPI(config, routing)
+    createAPI: (config:Config) => createAPI(config, routing)
   }
 }
 
