@@ -82,7 +82,7 @@ export class PriceItem extends Component {
   render () {
     const { roomsRequired, nights, group, tripStartDate } = this.props
     const { selectedHotel, selectedMealPlan, selectedRoomType, selectedNights } = this.state
-    const { prices = [], room_types, meal_plans } = (selectedHotel ? selectedHotel.value : {})
+    const { prices = [], room_types = [], meal_plans = [] } = (selectedHotel ? selectedHotel.value : {})
     this.price = 0
     let warnMessage = ""
     if (selectedHotel && selectedMealPlan && selectedRoomType && selectedNights) {

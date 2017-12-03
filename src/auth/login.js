@@ -25,6 +25,7 @@ class Login extends Component {
   state = {
     email: process.env.REACT_APP_AUTH_EMAIL,
     password: process.env.REACT_APP_AUTH_PASSWORD,
+    loginErrors: undefined
   }
 
   handleChangeEmail = e => {
@@ -39,11 +40,26 @@ class Login extends Component {
     })
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.user.status !== "authenticating" && this.props.user.status === "authenticating") {
+      // login response has come
+      if (nextProps.user.errors) {
+        // there have been some errors
+        this.setState({
+          loginErrors: nextProps.user.errors
+        })
+      }
+    }
+  }
+
   login = (e) => {
     e.preventDefault()
     const { login } = this.props
     const email = this.state.email.trim()
     const password = this.state.password
+    this.setState({
+      loginErrors: undefined
+    })
     login({email, password})
   }
 
@@ -54,7 +70,7 @@ class Login extends Component {
       return <Redirect to={from}/>
     }
 
-    const { email, password } = this.state
+    const { email, password, loginErrors } = this.state
 
     return (
       <div>
@@ -77,7 +93,14 @@ class Login extends Component {
                           <Button bsStyle="link">Forgot your password ?</Button>
                         </LinkContainer> */}
                   </Col>
-                </Row>} bsStyle="primary">
+                </Row>} bsStyle={loginErrors ? "danger" : "primary"}>
+                  {loginErrors ? (
+                    <FormGroup className="text-danger">
+                      <Col smOffset={4} sm={6}>
+                        Invalid credentials. Please try again.
+                      </Col>
+                    </FormGroup>
+                    ) : null}
                   <FormGroup controlId="formHorizontalEmail">
                     <Col componentClass={ControlLabel} sm={4}>
                       Email
@@ -97,7 +120,6 @@ class Login extends Component {
                         value={password} onChange={this.handleChangePassword} />
                     </Col>
                   </FormGroup>
-
                   {/*<FormGroup>
                     <Col smOffset={4} sm={6}>
                       <Checkbox>Remember me</Checkbox>
