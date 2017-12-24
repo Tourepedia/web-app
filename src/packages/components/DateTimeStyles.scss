@@ -88,6 +88,11 @@
     .form-control {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
+      border-right: none;
+      box-shadow: none;
+      &:focus {
+        border-color: #ccc;
+      }
     }
   }
 
@@ -95,16 +100,19 @@
     padding: 6px 0;
     font-size: 14px;
     font-weight: normal;
-    color: #555;
+    color: #ccc;
     text-align: center;
-    background-color: #eee;
     border: 1px solid #ccc;
+    border-left: none;
     border-radius: 4px;
     outline: none;
+    width: 30px;
+    will-change:color;
+    transition: color linear .15s;
 
-    &::focus {
-      border-color: #66afe9;
-      outline: 0;
+    &:focus, &:hover, &:active {
+      color: black;
+      outline: none;
     }
 
     &:disabled {
@@ -114,11 +122,6 @@
 
   &--clearable &, &__cleaner {
     display: table-cell;
-  }
-
-
-  &__cleaner {
-    width: 20px;
   }
 
   &--clearable & {

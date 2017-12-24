@@ -38,10 +38,11 @@ export class DatePicker extends Component {
 
   constructor (...args) {
     super(...args)
-    const { defaultValue, inputTZ } = this.props
+    const { defaultValue, inputTZ, onChange } = this.props
     this.state = {
       value: defaultValue && (inputTZ === "utc" ? moment.utc(defaultValue).local() : moment(defaultValue))
     }
+    onChange && onChange(this.state.value)
   }
 
   componentDidMount () {
@@ -121,7 +122,7 @@ export class DatePicker extends Component {
         {...otherProps}
         />
       {!disabled && (
-        <button type="button" title="Reset" className="rdt__cleaner" onClick={this.handleClearDate}>&times;</button>
+        <button type="button" title="Reset" className="rdt__cleaner" tabIndex="-1" onClick={this.handleClearDate}>&times;</button>
         )}
     </Component>
   }
