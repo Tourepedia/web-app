@@ -43,6 +43,7 @@ export class DatePicker extends Component {
       value: defaultValue && (inputTZ === "utc" ? moment.utc(defaultValue).local() : moment(defaultValue))
     }
     onChange && onChange(this.state.value)
+    this.id = "dateSelect__" + Math.floor(Math.random() * 1000).toString()
   }
 
   componentDidMount () {
@@ -87,6 +88,21 @@ export class DatePicker extends Component {
     return this.state.value
   }
 
+  handleFakeOnChange = () => {
+    // focus the date picker
+    this.focusDatePicker()
+  }
+
+  setInputRef = (ref) => {
+    this.dateInputRef = ref
+  }
+
+  focusDatePicker = () => {
+    if (this.dateInputRef && this.dateInputRef.focus) {
+      this.dateInputRef.focus()
+    }
+  }
+
   render () {
     const { independent, startDate, endDate, onChange, readOnly, componentClass: Component,
       dateFormat, clearable, isValidDate, defaultValue,
@@ -103,6 +119,14 @@ export class DatePicker extends Component {
     }
 
     return <Component className={classnames("rdt-container", {"rdt--clearable" : clearable && !disabled})}>
+      <input
+        type="text"
+        className="rdt__hidden-input"
+        value={value ? value.format(dateFormat) : ""}
+        required={required}
+        onChange={this.handleFakeOnChange}
+        onFocus={this.focusDatePicker}
+        name={`datePicker__${this.id}`} />
       <DateTime
         inputProps={{
           className: inputClassName,
@@ -113,7 +137,8 @@ export class DatePicker extends Component {
           disabled,
           autoComplete,
           autoFocus,
-          required
+          required,
+          ref: this.setInputRef
         }}
         value={value}
         onChange={this.handleOnChange}
