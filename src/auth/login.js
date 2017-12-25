@@ -107,7 +107,8 @@ class Login extends Component {
                     </Col>
                     <Col sm={6}>
                       <FormControl type="email" placeholder="Email"
-                        name="email" required autoFocus value={email} onChange={this.handleChangeEmail} />
+                        name="email" required autoFocus value={email} onChange={this.handleChangeEmail}
+                        autoComplete="username email" />
                     </Col>
                   </FormGroup>
 
@@ -117,7 +118,8 @@ class Login extends Component {
                     </Col>
                     <Col sm={6}>
                       <FormControl type="password" placeholder="Password" name="password" required
-                        value={password} onChange={this.handleChangePassword} />
+                        value={password} onChange={this.handleChangePassword}
+                        autoComplete="current-password" />
                     </Col>
                   </FormGroup>
                   {/*<FormGroup>

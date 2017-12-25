@@ -4,6 +4,8 @@ import {
     Navbar,
     Nav,
     NavItem,
+    NavDropdown,
+    MenuItem,
     Row,
     Col,
     Panel,
@@ -27,7 +29,7 @@ import {
     Media,
 } from 'react-bootstrap'
 import { LinkContainer } from "react-router-bootstrap"
-
+import DotDotDot from "./DotDotDot/"
 // BBreadcrumb.Item require an active as a props, but we get className="active" from LinkContainer, so wrap it to fake it
 const BreadcrumbItem = ({ className, ...otherProps }) => <BBreadcrumb.Item active={className === "active"} {...otherProps} />
 
@@ -51,6 +53,8 @@ export {
     Navbar,
     Nav,
     NavItem,
+    NavDropdown,
+    MenuItem,
     Row,
     Col,
     Panel,
@@ -72,5 +76,6 @@ export {
     InputGroup,
     Glyphicon,
     Media,
+    DotDotDot
 }
 

@@ -1,11 +1,28 @@
 /**
  * This file handles the user state
  */
-
+// @flow
 import authApi from "./authApi"
 
+type UserState = {
+  status: "unauthenticated" | "authenticating" | "authenticated" | "unauthenticating",
+  info: string,
+  data?: { id: number },
+  errors?: {}
+};
+
+type State = {} | null;
+
+type Action = { type: string, payload?: any };
+
+type ActionDispatcher = (...args: any) => Action;
+
+type GetState = () => State;
+
+type Reducer = (state: State, action: Action) => State;
+
 // initial state
-const INITIAL_STATE = {
+const INITIAL_STATE: UserState = {
   status: "unauthenticated",
   info: "not-fetched",
   data: undefined,
@@ -16,26 +33,26 @@ const INITIAL_STATE = {
 /*
  * Action type constants
  */
-export const ACTION_TYPE_LOGIN_REQUEST = "LOGIN_REQUEST"
-export const ACTION_TYPE_LOGIN_SUCCESS = "LOGIN_SUCCESS"
-export const ACTION_TYPE_LOGIN_FAILED = "LOGIN_FAILED"
-export const ACTION_TYPE_LOGOUT_REQUEST = "LOGOUT_REQUEST"
-export const ACTION_TYPE_LOGOUT_SUCCESS = "LOGOUT_SUCCESS"
-export const ACTION_TYPE_LOGOUT_FAILED = "LOGOUT_FAILED"
-export const ACTION_TYPE_USER_INFO_REQUEST = "USER_INFO_REQUEST"
-export const ACTION_TYPE_USER_INFO_SUCCESS = "USER_INFO_SUCCESS"
-export const ACTION_TYPE_USER_INFO_FAILED = "USER_INFO_FAILED"
+export const ACTION_TYPE_LOGIN_REQUEST: string = "LOGIN_REQUEST"
+export const ACTION_TYPE_LOGIN_SUCCESS: string = "LOGIN_SUCCESS"
+export const ACTION_TYPE_LOGIN_FAILED: string = "LOGIN_FAILED"
+export const ACTION_TYPE_LOGOUT_REQUEST: string = "LOGOUT_REQUEST"
+export const ACTION_TYPE_LOGOUT_SUCCESS: string = "LOGOUT_SUCCESS"
+export const ACTION_TYPE_LOGOUT_FAILED: string = "LOGOUT_FAILED"
+export const ACTION_TYPE_USER_INFO_REQUEST: string = "USER_INFO_REQUEST"
+export const ACTION_TYPE_USER_INFO_SUCCESS: string = "USER_INFO_SUCCESS"
+export const ACTION_TYPE_USER_INFO_FAILED: string = "USER_INFO_FAILED"
 
 // actions
 export const loginRequest = () => ({
   type: ACTION_TYPE_LOGIN_REQUEST
 })
 
-export const loginSuccess = (data = {}) => ({
+export const loginSuccess = (data: {} = {}) => ({
   type: ACTION_TYPE_LOGIN_SUCCESS
 })
 
-export const loginFailed = (errors = {}) => ({
+export const loginFailed = (errors: {} = {}) => ({
   type: ACTION_TYPE_LOGIN_FAILED,
   payload: errors
 })
@@ -48,7 +65,7 @@ export const logoutSuccess = () => ({
   type: ACTION_TYPE_LOGOUT_SUCCESS
 })
 
-export const logoutFailed = (errors) => ({
+export const logoutFailed = (errors: {}) => ({
   type: ACTION_TYPE_LOGOUT_FAILED,
   payload: errors
 })
@@ -57,12 +74,12 @@ export const userInfoRequest = () => ({
   type: ACTION_TYPE_USER_INFO_REQUEST
 })
 
-export const userInfoSuccess = (data) => ({
+export const userInfoSuccess = (data: {}) => ({
   type: ACTION_TYPE_USER_INFO_SUCCESS,
   payload: data
 })
 
-export const userInfoFailed = (errors) => ({
+export const userInfoFailed = (errors: {}) => ({
   type: ACTION_TYPE_USER_INFO_FAILED,
   payload: errors
 })
@@ -75,7 +92,7 @@ export const userInfoFailed = (errors) => ({
  * @param  {Object} data [description]
  * @return {[type]}      [description]
  */
-export const login = (data = {}) => (dispatch, getState) => {
+export const login = (data: { email?: string, password?: string } = {}) => (dispatch: ActionDispatcher, getState: GetState) => {
   dispatch(loginRequest())
   return authApi(getState()).login(data)
     .then(response => {
@@ -92,7 +109,7 @@ export const login = (data = {}) => (dispatch, getState) => {
  * @param  {[type]} ) [description]
  * @return {[type]}   [description]
  */
-export const logout = () => (dispatch, getState) => {
+export const logout = () => (dispatch: ActionDispatcher, getState: GetState) => {
   dispatch(logoutRequest())
   return authApi(getState()).logout()
     .then(response => {
@@ -112,7 +129,7 @@ export const logout = () => (dispatch, getState) => {
 }
 
 
-export const getUserInfo = () => (dispatch, getState) => {
+export const getUserInfo = () => (dispatch: ActionDispatcher, getState: GetState) => {
   dispatch(userInfoRequest())
   return authApi(getState()).getInfo()
     .then(response => {
@@ -147,7 +164,9 @@ const ACTION_HANDLERS = {
   [ACTION_TYPE_LOGOUT_FAILED]: (state, payload) => ({ ...state,  status: "authenticated", errors: payload }),
 }
 
-export default function (state = INITIAL_STATE, action) {
+const reducer: Reducer = (state: UserState | State = INITIAL_STATE, action: Action) => {
   const handler = ACTION_HANDLERS[action.type]
   return handler ? handler(state, action.payload) : state
 }
+
+export default reducer

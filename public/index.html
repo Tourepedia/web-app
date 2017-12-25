@@ -25,7 +25,44 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div>
+        <style type="text/css">
+          .app-loading {
+            position: fixed;
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            line-height: 100vh;
+            text-align: center;
+            background: white;
+            color: #4787f2; }
+            .dot-dot-dot span {
+              animation-name: blink;
+              animation-duration: 1.4s;
+              animation-iteration-count: infinite;
+              animation-fill-mode: both;
+              letter-spacing: 5px; }
+              .dot-dot-dot span:nth-child(2) {
+                animation-delay: .2s; }
+              .dot-dot-dot span:nth-child(3) {
+                animation-delay: .4s; }
+
+            @keyframes blink {
+              0% {
+                opacity: .2; }
+              20% {
+                opacity: 1; }
+              100% {
+                opacity: .2; } }
+        </style>
+        <h1 class="app-loading">Please wait <span class="dot-dot-dot"><span>.</span><span>.</span><span>.</span></span></h1>
+      </div>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
