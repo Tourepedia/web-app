@@ -9,8 +9,9 @@ type Props = {
 };
 
 export const ConnectedPermission = ({ render, permission }: Props): React.Node =>
-  <ConnectedAuth render={({ isAuthenticated, user }) =>
+  <ConnectedAuth render={({ isAuthenticated, user, ...otherProps }) =>
     render({
+      ...otherProps,
       hasPermssion: isAuthenticated && user.permissions.indexOf(permission) !== -1,
       isAuthenticated: isAuthenticated,
       user: user
@@ -22,15 +23,15 @@ export const withPermission = (WrappedComponent: React.ComponentType<{}>, permis
     render (): React.Node {
       return <ConnectedPermission
         permission={permission}
-        render={({ hasPermssion }) => !hasPermssion
+        render={({ hasPermssion, ...otherProps }) => !hasPermssion
           ? null
-          : <WrappedComponent {...this.props} />} />
+          : <WrappedComponent {...otherProps} {...this.props} />} />
     }
 }
 
 export const WithPermissionRoute = ({ component: Component, permission, ...rest }: { component: React.ComponentType<{}>, permission: string, rest: any }): React.Node => (
-  <ConnectedPermission permission={permission} render={({ hasPermssion, isAuthenticated }) => (
-    <Route {...rest} render={props => (
+  <ConnectedPermission permission={permission} render={({ hasPermssion, isAuthenticated, ...otherProps }) => (
+    <Route {...otherProps} {...rest} render={props => (
       hasPermssion ? (
         <Component {...props}/>
       ) : !isAuthenticated ? (

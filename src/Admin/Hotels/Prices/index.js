@@ -8,7 +8,7 @@ import { LinkContainer } from "react-router-bootstrap"
 import DatePicker from "components/DateTime"
 
 import {default as Sel, withAutoSelect} from "components/Select/"
-import HotelsSelect from "./priceHotelsSelect"
+import HotelsSelect from "./../priceHotelsSelect"
 
 import tpuid from "tpuid"
 
@@ -448,7 +448,7 @@ export class Prices extends Component {
           </Col>
           <Col sm={6} lg={4}>
             <FormGroup controlId="group">
-              <ControlLabel>Group Details</ControlLabel>
+              <ControlLabel>Group Details *</ControlLabel>
               <FormControl
                 type="text"
                 name="group_details"

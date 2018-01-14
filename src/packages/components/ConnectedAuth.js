@@ -11,9 +11,14 @@ type Props = {
   render: ({ isAuthenticated: boolean, user?: {} }) => React.Node
 };
 
-export const ConnectedAuth = connect(state => ({ user: state.user }))(
-  ({ user, render }: Props): React.Node =>
-    render({ isAuthenticated: user.status !== "unauthenticated" && user.status !== "authenticating", user: user.data }))
+const ConnectedAuthComponent = ({ user, render, ...otherProps }: Props): React.Node =>
+    render({
+      ...otherProps,
+      isAuthenticated: user.status !== "unauthenticated" && user.status !== "authenticating",
+      user: user.data
+    })
+
+export const ConnectedAuth = connect(state => ({ user: state.user }))(ConnectedAuthComponent)
 
 export default ConnectedAuth
 
@@ -21,15 +26,15 @@ export const withAuth = (WrappedComponent: React.ComponentType<{}>) =>
   class WithAuth extends React.Component<{}> {
     render (): React.Node {
       return <ConnectedAuth
-        render={({ isAuthenticated }) => !isAuthenticated
+        render={({ isAuthenticated, ...otherProps }) => !isAuthenticated
           ? null
-          : <WrappedComponent {...this.props} />} />
+          : <WrappedComponent {...otherProps} {...this.props} />} />
     }
 }
 
 export const WithAuthRoute = ({ component: Component, ...rest }: { component: React.ComponentType<{}>, rest: any }) => (
-  <ConnectedAuth render={({ isAuthenticated }): React.Node => (
-    <Route {...rest} render={props => (
+  <ConnectedAuth render={({ isAuthenticated, ...otherProps }): React.Node => (
+    <Route {...otherProps} {...rest} render={props => (
       isAuthenticated ? (
         <Component {...props}/>
       ) : (

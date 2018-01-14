@@ -34,11 +34,12 @@ export const header = () => (
         <LinkContainer eventKey={2} to="/about">
           <NavItem><Glyphicon glyph="info-sign" />&nbsp;&nbsp;About Us</NavItem>
         </LinkContainer>
-        <ConnectedAuth render={({ isAuthenticated, user }) => !isAuthenticated ? <LinkContainer eventKey={3} to="/profile">
+        <ConnectedAuth render={({ isAuthenticated, user, ...otherProps }) => !isAuthenticated
+          ? <LinkContainer eventKey={3} to="/profile" {...otherProps}>
           <NavItem><Glyphicon glyph="user" />&nbsp;&nbsp;Login</NavItem>
         </LinkContainer> : <NavDropdown eventKey={3} title={<span>
           Hi {user.name.split(/\s/)[0]}
-        </span>} id="userInfoDropdown">
+        </span>} id="userInfoDropdown" {...otherProps}>
           <LinkContainer eventKey={3.1} to="/profile">
             <MenuItem><Glyphicon glyph="user" />&nbsp;&nbsp;Profile</MenuItem>
           </LinkContainer>

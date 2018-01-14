@@ -14,7 +14,7 @@ import Show from "./Show/"
 import New from "./new"
 import RoomTypes from "./RoomTypes"
 import MealPlans from "./MealPlans"
-import Prices from "./prices"
+import Prices from "./Prices/"
 
 export class View extends Component {
   // we need store from context type for adding reducer
