@@ -36,6 +36,23 @@
     "build:production": "REACT_APP_ENV=production npm run build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "flow": "flow"
+    "flow": "flow",
+    "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
+    "prepush-msg": "echo 'Pre-push checks...' && exit 0",
+    "lint-staged": "lint-staged",
+    "husky": "husky"
+  },
+  "lint-staged": {
+    "*.js": ["eslint --fix", "flow", "git add"]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit-msg && npm run lint-staged",
+      "pre-push": "npm run prepush-msg && npm run test"
+    }
+  },
+  "devDependencies": {
+    "husky": "^0.15.0-rc.12",
+    "lint-staged": "^7.0.0"
   }
 }
