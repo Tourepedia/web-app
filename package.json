@@ -35,6 +35,7 @@
     "build:staging": "REACT_APP_ENV=staging npm run build",
     "build:production": "REACT_APP_ENV=production npm run build",
     "test": "react-scripts test --env=jsdom",
+    "test:staged": "cross-env CI=true npm run test",
     "eject": "react-scripts eject",
     "flow": "flow",
     "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
@@ -56,6 +57,7 @@
     }
   },
   "devDependencies": {
+    "cross-env": "^5.1.4",
     "husky": "^0.15.0-rc.12",
     "lint-staged": "^7.0.0"
   }
