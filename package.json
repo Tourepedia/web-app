@@ -53,7 +53,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run precommit-msg && npm run lint-staged",
-      "pre-push": "npm run prepush-msg && npm run test"
+      "pre-push": "npm run prepush-msg && npm run test:staged"
     }
   },
   "devDependencies": {
